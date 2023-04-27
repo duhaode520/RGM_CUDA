@@ -15,6 +15,7 @@ protected:
     // TODO: 这里可能还要统一做一些修改,核函数的参数应该都是简单变量吧
     virtual __global__ void execute(Particle* par, double* cost, Flow* data);
 
+
 public:
     Cost(/* args */) {}
     ~Cost() {}

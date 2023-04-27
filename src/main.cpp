@@ -32,8 +32,8 @@ using namespace std;
  */ 
 
 int main(int argc, char* argv[]) {
-    Flow datacache[dataConfig.flowNum];
     parseArgs(argc, argv);
+    Flow datacache[dataConfig.flowNum];
     logStartInfo();
     Flow::loadData(dataConfig.dataFile);   
     Particle Ppar[Npar](dataConfig.cDim);

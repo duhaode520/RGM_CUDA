@@ -8,6 +8,7 @@ Particle::Particle(int dim) {
         Par[i] = new double[dim];
         Pbest[i] = new double[dim];
     }
+    // !Incomplete
 
 }
 
@@ -24,6 +25,9 @@ void Particle::initialize() {
 
 void Particle::train(Flow* data) {
     costFunction.calcuate(this, cost, data);
+    // *best update
+    
+    // *swarm update
 }
 
 Particle::~Particle() {
