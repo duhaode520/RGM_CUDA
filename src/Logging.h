@@ -10,6 +10,8 @@
 #include <vector>
 #include "DataConfig.h"
 #include "Particle.h"
+
+using namespace std;
 class Logging {
 private:
     /* data */

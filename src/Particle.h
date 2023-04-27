@@ -18,14 +18,17 @@ private:
     double* Gbest_cost;
     Cost costFunction;
 
+
+public:
     static const double Xmin = 0.001;
     static const double Xmax = 100000000;
     static const double Xrandmin = 5;
     static const double Xrandmax = 70;
     static const int Npar = 4096;// Number of particles each swarm
-
-
-public:
+    static const double alpha = 0.75;
+    static const double pjump = 0.001;
+    static const double SCALE = 1;
+    static const int Maxiter = 3000;
     Particle(int dim);
 
     // 初始化 Pbest Par Gbest
@@ -34,7 +37,7 @@ public:
     void setCost(Cost costFunction);
     // 训练
     void train(Flow* data);
-
+    
     ~Particle();
 };
 

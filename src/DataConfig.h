@@ -17,7 +17,8 @@ public:
     int flowNum; // number of flows
     std::string* nodeNames; // node names
     std::string* outputFile; // outputfile
-    
+    int flowScale;
+    int distScale;
 
     DataConfig();
     ~DataConfig();
