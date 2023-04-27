@@ -21,6 +21,7 @@
 #include "Flow.h"
 #include "utils.h"
 #include "Particle.h"
+#include "Logging.h"
 
 using namespace std;
 
@@ -32,9 +33,9 @@ using namespace std;
  */ 
 
 int main(int argc, char* argv[]) {
-    Flow datacache[dataConfig.flowNum];
+    // Flow datacache[dataConfig.flowNum];
     parseArgs(argc, argv);
-    logStartInfo();
+    logStartInfo(dataConfig);
     Flow::loadData(dataConfig.dataFile);   
     Particle Ppar[Npar](dataConfig.cDim);
     Particle Qpar(dataConfig.dim);
