@@ -9,13 +9,16 @@ private:
 public:
 
     int nodeNum; // number of nodes
+    std::string dataType; // data file name
     std::string dataFile; // data file name
     int dim; // dimension of particles //TODO: Strange here
     int cDim; // dimesnion used in P-swarm
     int rDim; // TODO: deprecated
     int flowNum; // number of flows
     std::string* nodeNames; // node names
-
+    std::string* outputFile; // outputfile
+    int flowScale;
+    int distScale;
 
     DataConfig();
     ~DataConfig();

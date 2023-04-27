@@ -1,4 +1,7 @@
 #include "DataConfig.h"
+#include <string>
+
+
 DataConfig dataConfig;
 
 DataConfig::DataConfig()

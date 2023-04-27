@@ -1,10 +1,4 @@
-/**
- * @file PSOConfig.h
- * @author Haode Du
- * @brief Configuartions for PSO Algorithm
- * @version 1
- * @date 2023-04-25
- */
+
 #ifndef PSOCONFIG_H
 #define PSOCONFIG_H
 

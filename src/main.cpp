@@ -21,6 +21,7 @@
 #include "Flow.h"
 #include "utils.h"
 #include "Particle.h"
+#include "Logging.h"
 
 using namespace std;
 
