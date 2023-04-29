@@ -34,9 +34,12 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     parseArgs(argc, argv);
-    Flow datacache[dataConfig.flowNum];
-    logStartInfo();
-    Flow::loadData(dataConfig.dataFile);   
+    Logging::logStartInfo(dataConfig);
+
+    Flow* datacache = new Flow[dataConfig.flowNum];
+    Flow::tflow = new int[dataConfig.dim];
+    Flow::loadData(datacache, dataConfig.dataFile);   
+
     Particle Ppar[Npar](dataConfig.cDim);
     Particle Qpar(dataConfig.dim);
     
@@ -55,11 +58,16 @@ int main(int argc, char* argv[]) {
             Ppar[s].train(datacache);
         }
         exchange();
-        Qpar.train();
+        Qpar.train(datacache);
         exchange();
     }
     
     saveResults();
-    release();
+    #pragma region release
+
+    delete[] datacache;
+    delete[] Flow::tflow;
+
+    #pragma endregion
     return 0;
 }

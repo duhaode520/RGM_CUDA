@@ -1,6 +1,7 @@
 #ifndef DATARECORD_H
 #define DATARECORD_H
 #include <string>
+#include "DataConfig.h"
 
 class Flow {
 private:
@@ -11,12 +12,12 @@ public:
 	int flow;
 	float dist;
 
-	Flow(int src, int dest, int flow, float dist);
-	~Flow();
+	Flow() {};
+	~Flow() ;
 
-	static int tflow[dataConfig.dim]; // TODO: 这里和dataConfig不应该有这么深的耦合
+	static int* tflow;  
 
-	static void loadData(std::string filename);
+	static void loadData(Flow* data, std::string filename);
 };
 
 

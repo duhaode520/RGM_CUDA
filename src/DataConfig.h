@@ -1,11 +1,15 @@
 #ifndef DATACONFIG_H
 #define DATACONFIG_H
 #include <iostream>
-
+#include <map>
+#include <fstream>
 
 class DataConfig {
 private:
-    /* data */
+    void parseConfig(std::ifstream& infile, std::map<std::string, std::string>& config);
+
+    void parseList(std::string* resultList, std::string listStr);
+
 public:
 
     int nodeNum; // number of nodes
@@ -16,7 +20,7 @@ public:
     int rDim; // TODO: deprecated
     int flowNum; // number of flows
     std::string* nodeNames; // node names
-    std::string* outputFile; // outputfile
+    std::string outputFile; // outputfile
     int flowScale;
     int distScale;
 
