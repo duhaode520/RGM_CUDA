@@ -17,6 +17,7 @@ public:
     std::string dataFile; // data file name
     int dim; // dimension of particles //TODO: Strange here
     int cDim; // dimesnion used in P-swarm
+    int PSwarmNum; // number of P-swarm groups
     int rDim; // TODO: deprecated
     int flowNum; // number of flows
     std::string* nodeNames; // node names

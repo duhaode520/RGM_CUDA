@@ -21,7 +21,7 @@
 #include "Flow.h"
 #include "utils.h"
 #include "Particle.h"
-#include "Logging.h"
+#include "Logger.h"
 
 using namespace std;
 
@@ -34,27 +34,34 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
     parseArgs(argc, argv);
-    Logging::logStartInfo(dataConfig);
+    Logger logger(dataConfig.outputFile);
+    logger.logStartInfo(dataConfig);
 
     Flow* datacache = new Flow[dataConfig.flowNum];
     Flow::tflow = new int[dataConfig.dim];
     Flow::loadData(datacache, dataConfig.dataFile);   
+    logger.printSessionTime("Data Loading");
 
-    Particle Ppar[Npar](dataConfig.cDim);
-    Particle Qpar(dataConfig.dim);
-    
-    for (int i = 0; i < Npar; i++) {
-        Ppar[i].initialize();
+    Particle Ppar[dataConfig.PSwarmNum];
+    Particle Qpar;
+
+    for (int i = 0; i < dataConfig.PSwarmNum; i++) {
+        if (i == dataConfig.PSwarmNum - 1) {
+            Ppar[i].initialize(dataConfig.dim - i * dataConfig.cDim);
+        } else {
+            Ppar[i].initialize(dataConfig.cDim);
+        }
     }
-    Qpar.initialize();
+    Qpar.initialize(dataConfig.dim);
+
+    logger.printSessionTime("Initialization");
 
     double rjump,sigma;
     int Crossid;
     int iter = 0;
-    int K; // number of P-swarms
 
     while (iter < Maxiter) {
-        for (int s = 0; s < K; s++) {
+        for (int s = 0; s < dataConfig.PSwarmNum; s++) {
             Ppar[s].train(datacache);
         }
         exchange();

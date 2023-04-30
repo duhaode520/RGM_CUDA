@@ -1,6 +1,7 @@
 #include "DataConfig.h"
 #include <string>
 #include <regex>
+#include <cmath>
 
 
 DataConfig dataConfig;
@@ -29,7 +30,8 @@ void DataConfig::load(std::string filename) {
     nodeNum = std::stoi(config["nodeNum"]);
     dataType = config["dataType"];
     dataFile = config["dataFile"];
-    dim = std::stoi(config["dim"]);
+    dim = 2 * nodeNum + 1;
+    PSwarmNum = int(ceil(1.0 * dim / dataConfig.cDim));
     cDim = std::stoi(config["cDim"]);
     rDim = std::stoi(config["rDim"]);
     flowNum = std::stoi(config["flowNum"]);
