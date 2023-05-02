@@ -2,7 +2,10 @@
 #define COST_H
 #include "Flow.h"
 #include "Particle.h"
-#include "Metrics.h"
+#include "Metrics.cuh"
+#include "PSOConfig.h"
+#include "Model.cuh"
+#include "consts.h"
 
 /**
  * @brief parent class for all cost functions
@@ -11,13 +14,18 @@
 class Cost {
 protected:
     /* data */
-    Metrics metrics;
-    // TODO: 这里可能还要统一做一些修改,核函数的参数应该都是简单变量吧
-    virtual __global__ void execute(Particle* par, double* cost, Flow* data);
+    Metrics* metrics;
+    Model* model;
+    int nodeNum;
+    int dim;
 
+    __global__ virtual void execute(double* pars, double* cost, Flow* data);
+
+    static const int THREADS_PER_BLOCK = 64; // thread number per block used in kernel function
 
 public:
-    Cost(/* args */) {}
+    Cost() {}
+    Cost(int nodeNum, int dim, ModelTypeEnum modelType, MetricsTypeEnum metricsType); 
     ~Cost() {}
     
     void calcuate(Particle* par, double* cost, Flow* data);
@@ -27,17 +35,17 @@ public:
 
 class RegularCost : public Cost {
 protected:
-    __global__ void execute(Particle* par, double* cost, Flow* data);
+    __global__ void execute(double* par, double* cost, Flow* data);
 };
 
 class PCost : public Cost {
 protected:
-    __global__ void execute(Particle* par, double* cost, Flow* data);
+    __global__ void execute(double* par, double* cost, Flow* data);
 };
 
 class RCost : public Cost {
 protected:
-    __global__ void execute(Particle* par, double* cost, Flow* data);
+    __global__ void execute(double* par, double* cost, Flow* data);
 };
 
 #endif
