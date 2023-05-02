@@ -14,11 +14,11 @@ void Logger::log_start(std::ostream &out, DataConfig dataConfig) {
     out << "flowscale: " << dataConfig.flowScale << " distscale: " << dataConfig.distScale << std::endl;
 }
 
-Logger::Logger(std::string outputfile) {
+Logger::Logger(std::string outputfile)
+{
     ofstream.open(outputfile);
     tstart = clock();
     tprev = tstart;
-
 }
 
 Logger::~Logger() {
@@ -36,4 +36,21 @@ void Logger::printSessionTime(std::string sessionName) {
     std::cout << sessionName << " finished in time: " << time << "s" << std::endl;
     ofstream << sessionName << " finished in time: " << time << "s" << std::endl;
     tprev = tend;
+}
+
+template <typename T, typename... Args>
+void Logger::logItem(T arg, Args... args) {
+    std::cout << arg << " ";
+    ofstream << arg << " ";
+    log(args...);
+}
+
+void Logger::logItem() {
+    std::cout << std::endl;
+    ofstream << std::endl;
+}
+
+template <typename... Args>
+void Logger::log(Args... args) {
+    logItem(args...);
 }

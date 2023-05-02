@@ -20,7 +20,12 @@ double BoxMullerRandom() {
     return r;
 }
 
-void parseArgs(int argc, char *argv[]) {
+double random01() {
+    return rand() / RAND_MAX;
+}
+
+void parseArgs(int argc, char *argv[])
+{
     if (argc > 3) {
         std::cerr << "More than 2 arguments are not supported" << std::endl;
     } else if (argc == 3) {
@@ -36,10 +41,10 @@ void parseArgs(int argc, char *argv[]) {
             std::string type = argv[2];
             if (type == "county") {
                 dataConfig.load("configs/county.ini");
-                dataConfig.dataType='county'
+                dataConfig.dataType='county';
             } else if (type == "city") {
                 dataConfig.load("configs/city.ini");
-                dataConfig.dataType='city'
+                dataConfig.dataType='city';
             } else {
                 std::cerr << "Invalid type argument. Type argument must be county or city" << std::endl;
             }

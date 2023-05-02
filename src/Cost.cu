@@ -57,3 +57,10 @@ __global__ void RegularCost::execute(double* pars, double *cost, Flow* data) {
     cudaFree(pred);
 }
 
+RegularCost::RegularCost(int nodeNum, int dim, ModelTypeEnum modelType, MetricsTypeEnum metricsType) 
+    : Cost(nodeNum, dim, modelType, metricsType) {
+}
+
+PCost::PCost(int nodeNum, int dim, ModelTypeEnum modelType, MetricsTypeEnum metricsType) 
+    : Cost(nodeNum, dim, modelType, metricsType) {
+}

@@ -8,3 +8,8 @@ enum MetricsTypeEnum {
     MAPE,
     R2
 };
+
+enum CostTypeEnum {
+    Regular, 
+    P
+};

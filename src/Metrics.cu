@@ -35,5 +35,6 @@ __device__ double RsquaredMetric::calc(Flow* data, double* pred, int size) {
         ss_res += (data[i].flow - pred[i]) * (data[i].flow - pred[i]);
     }
     return 1 - ss_res / ss_tot;
+
 }
 

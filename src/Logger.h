@@ -19,13 +19,24 @@ private:
     std::ofstream ofstream;
     clock_t tprev;
     void log_start(std::ostream& out, DataConfig dataConfig);
+    
+    template <typename T, typename... Args> 
+    void logItem(T arg, Args... args);
+
+    void logItem();
+
 public:
     Logger(std::string outputfile);
     ~Logger();
     void logStartInfo(DataConfig dataConfig);
     void printSessionTime(std::string sessionName);
+
+    template <typename... Args>
+    void log(Args... args);
+
+    
 };
 
 
-#endif 
+#endif
 

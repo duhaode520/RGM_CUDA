@@ -28,6 +28,13 @@ public:
     Cost(int nodeNum, int dim, ModelTypeEnum modelType, MetricsTypeEnum metricsType); 
     ~Cost() {}
     
+    /**
+     * @brief Calculate the cost of a particle
+     * 
+     * @param par all particles
+     * @param cost return the cost of each particle 
+     * @param data flow datas
+     */
     void calcuate(Particle* par, double* cost, Flow* data);
     
 
@@ -36,11 +43,17 @@ public:
 class RegularCost : public Cost {
 protected:
     __global__ void execute(double* par, double* cost, Flow* data);
+
+public:
+    RegularCost(int nodeNum, int dim, ModelTypeEnum modelType, MetricsTypeEnum metricsType); 
 };
 
 class PCost : public Cost {
 protected:
     __global__ void execute(double* par, double* cost, Flow* data);
+
+public:
+    PCost(int nodeNum, int dim, ModelTypeEnum modelType, MetricsTypeEnum metricsType); 
 };
 
 class RCost : public Cost {

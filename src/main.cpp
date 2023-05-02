@@ -47,25 +47,32 @@ int main(int argc, char* argv[]) {
 
     for (int i = 0; i < dataConfig.PSwarmNum; i++) {
         if (i == dataConfig.PSwarmNum - 1) {
-            Ppar[i].initialize(dataConfig.dim - i * dataConfig.cDim);
+            // 最后一个粒子的维度可能不是cDim
+            int lastDim = dataConfig.dim - i * dataConfig.cDim;
+            Ppar[i].initialize(lastDim);
         } else {
             Ppar[i].initialize(dataConfig.cDim);
         }
+        Ppar[i].setCost(CostTypeEnum::P,
+            ModelTypeEnum::Reversed_Gravity, MetricsTypeEnum::RMSE);
     }
     Qpar.initialize(dataConfig.dim);
+    Qpar.setCost(CostTypeEnum::Regular,
+        ModelTypeEnum::Reversed_Gravity, MetricsTypeEnum::RMSE);
 
     logger.printSessionTime("Initialization");
 
-    double rjump,sigma;
     int Crossid;
     int iter = 0;
-
-    while (iter < Maxiter) {
+    for (int iter = 0; iter < Maxiter; iter++) {
         for (int s = 0; s < dataConfig.PSwarmNum; s++) {
             Ppar[s].train(datacache);
+            logger.log("Iter:", iter, "PSwarm:", s, "P GbestCost:", Ppar[s].getGbestCost());
         }
         exchange();
         Qpar.train(datacache);
+        logger.log("Iter:", iter, "Q GbestCost:", Qpar.getGbestCost(), 
+            "Gbest Beta:", Qpar.getGbestBeta()); 
         exchange();
     }
     
