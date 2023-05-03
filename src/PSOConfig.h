@@ -15,4 +15,5 @@ const double SCALE = 1;
 const double BETA_SCALE = 10;
 const double MAX_BETA = 2;
 
+
 #endif

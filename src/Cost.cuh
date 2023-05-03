@@ -9,7 +9,7 @@
 
 /**
  * @brief parent class for all cost functions
- * 
+ * @todo Model 和 Cost 现在是完全一一对应的，未来希望能把Model独立出来处理
  */
 class Cost {
 protected:
@@ -25,17 +25,28 @@ protected:
 
 public:
     Cost() {}
-    Cost(int nodeNum, int dim, ModelTypeEnum modelType, MetricsTypeEnum metricsType); 
+    Cost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType); 
     ~Cost() {}
     
     /**
-     * @brief Calculate the cost of a particle
+     * @brief Calculate the cost of particles
      * 
      * @param par all particles
      * @param cost return the cost of each particle 
      * @param data flow datas
      */
-    void calcuate(Particle* par, double* cost, Flow* data);
+    void calculate(Particle* par, double* cost, Flow* data); // TODO: 从 Particle 解耦
+    
+    /**
+     * @brief predict the cost of a particle
+     * 
+     * @param pars particles
+     * @param data  flow data
+     * @param metricsSize  the number of metrics
+     * @param metricsTypes the types of metrics
+     * @param cost the costs of different metrics of the particle
+     */
+    void predict(double* pars, Flow* data, int metricsSize, MetricsTypeEnum metricsTypes[], double* cost);
     
 
 };
@@ -45,7 +56,7 @@ protected:
     __global__ void execute(double* par, double* cost, Flow* data);
 
 public:
-    RegularCost(int nodeNum, int dim, ModelTypeEnum modelType, MetricsTypeEnum metricsType); 
+    RegularCost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType); 
 };
 
 class PCost : public Cost {
@@ -53,12 +64,8 @@ protected:
     __global__ void execute(double* par, double* cost, Flow* data);
 
 public:
-    PCost(int nodeNum, int dim, ModelTypeEnum modelType, MetricsTypeEnum metricsType); 
+    PCost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType); 
 };
 
-class RCost : public Cost {
-protected:
-    __global__ void execute(double* par, double* cost, Flow* data);
-};
 
 #endif

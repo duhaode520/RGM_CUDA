@@ -20,6 +20,7 @@ private:
     double* Gbest;
     double Gbest_cost;
     Cost costFunction;
+    Model* model;
     int Gbest_id;
 
     bool cost_init = false;
@@ -45,16 +46,22 @@ public:
      */
     void initialize(int dim);
 
-    void setCost(CostTypeEnum costType, ModelTypeEnum modelType, MetricsTypeEnum metricsType);
+    void setCost(CostTypeEnum costType, MetricsTypeEnum metricsType);
     
+    void setModel(ModelTypeEnum modelType);
     // 训练
     void train(Flow* data);
 
+    // 获取最后Gbest的cost
+    void predictCost(Flow* data, double* cost);
+    
     // 获取全局最优解对应的cost
     double getGbestCost();
 
     // 获取全局最优解的beta
     double getGbestBeta();
+
+    std::string getResult();
     
     static const double Xmin = 0.001;
     static const double Xmax = 100000000;
@@ -65,6 +72,7 @@ public:
     static const double pjump = 0.001;
     static const double SCALE = 1;
     static const int Maxiter = 3000;
+    static const int MetricsNum = 2;
 
     friend class Cost;
 };

@@ -29,19 +29,22 @@ void Particle::initialize(int dim) {
 
 }
 
-void Particle::setCost(CostTypeEnum costType, ModelTypeEnum modelType, MetricsTypeEnum metricsType) {
-    switch (costType)
-    {
+void Particle::setCost(CostTypeEnum costType, MetricsTypeEnum metricsType) {
+    switch (costType) {
     case CostTypeEnum::Regular:
-        this->costFunction = RegularCost(dataConfig.nodeNum, dim, modelType, metricsType);  
+        this->costFunction = RegularCost(dataConfig.nodeNum, dim, model, metricsType);  
         break;
     case CostTypeEnum::P:
-        this->costFunction = PCost(dataConfig.nodeNum, dim, modelType, metricsType);  
+        this->costFunction = PCost(dataConfig.nodeNum, dim, model, metricsType);  
         break;
     default:
         throw "Unknown Cost Type";
         break;
     }
+}
+
+void Particle::setModel(ModelTypeEnum modelType) {
+    this->model = Model::createModel(modelType, dataConfig.nodeNum, dim);
 }
 
 void Particle::train(Flow* data) {
@@ -50,14 +53,21 @@ void Particle::train(Flow* data) {
         costInitialize(data);
         return;
     }
-    costFunction.calcuate(this, cost, data);
+    costFunction.calculate(this, cost, data);
     bestUpdate();
     swarmUpdate();
 }
 
+void Particle::predictCost(Flow *data, double *cost) {
+    MetricsTypeEnum metricsTypes[MetricsNum] 
+        = {MetricsTypeEnum::RMSE, MetricsTypeEnum::R2};
+    costFunction.predict(Gbest, data, MetricsNum, metricsTypes, cost);
+
+}
+
 void Particle::costInitialize(Flow *data) {
     // cost initialization
-    costFunction.calcuate(this, cost, data);
+    costFunction.calculate(this, cost, data);
     memcpy(Pbest_cost, cost, sizeof(double) * Npar);
     Gbest_cost = Pbest_cost[0];
     Gbest_id = 0;
@@ -115,6 +125,10 @@ double Particle::getGbestCost() {
 
 double Particle::getGbestBeta() {
     return Gbest[dim - 1];
+}
+
+std::string Particle::getResult() { 
+    return model->getResult(Gbest);
 }
 
 Particle::~Particle() {

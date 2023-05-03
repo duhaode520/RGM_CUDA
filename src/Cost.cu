@@ -4,19 +4,18 @@
 #include "device_launch_parameters.h"
 
 
-Cost::Cost(int nodeNum, int dim, ModelTypeEnum modelType, MetricsTypeEnum metricsType){
+Cost::Cost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType){
     this->nodeNum = nodeNum;
     this->dim = dim;
-    this->model = Model::createModel(modelType);
+    this->model = model;
     this->metrics = Metrics::createMetrics(metricsType);
 }
 
 Cost::~Cost() {
-    delete model;
     delete metrics;
 }
 
-void Cost::calcuate(Particle* particles, double* cost, Flow* data) {
+void Cost::calculate(Particle* particles, double* cost, Flow* data) {
     
     // generate linear array
     double* LPar = new double[particles->Npar * particles->dim];
@@ -46,6 +45,18 @@ void Cost::calcuate(Particle* particles, double* cost, Flow* data) {
 
 }
 
+void Cost::predict(double* pars, Flow* data, int metricsSize, MetricsTypeEnum metricsTypes[], double* cost) {
+    double* pred;
+    int flowNum = nodeNum * (nodeNum - 1) / 2;
+    cudaMalloc((void**)&pred, flowNum * sizeof(double));
+    model->pred(0, pars, pred, data);
+    for (int i = 0; i < metricsSize; i++) {
+        metrics = Metrics::createMetrics(metricsTypes[i]);
+        cost[i] = metrics->calc(data, pred, flowNum);
+    }
+    cudaFree(pred);
+}
+
 // 对应的是 gh 代码的 cost
 __global__ void RegularCost::execute(double* pars, double *cost, Flow* data) {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
@@ -57,10 +68,20 @@ __global__ void RegularCost::execute(double* pars, double *cost, Flow* data) {
     cudaFree(pred);
 }
 
-RegularCost::RegularCost(int nodeNum, int dim, ModelTypeEnum modelType, MetricsTypeEnum metricsType) 
-    : Cost(nodeNum, dim, modelType, metricsType) {
+RegularCost::RegularCost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType) 
+    : Cost(nodeNum, dim, model, metricsType) {
 }
 
-PCost::PCost(int nodeNum, int dim, ModelTypeEnum modelType, MetricsTypeEnum metricsType) 
-    : Cost(nodeNum, dim, modelType, metricsType) {
+PCost::PCost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType) 
+    : Cost(nodeNum, dim, model, metricsType) {
+}
+
+__global__ void PCost::execute(double* pars, double* cost, Flow* data) {
+    int index = blockIdx.x * blockDim.x + threadIdx.x;
+    double* pred;
+    int flowNum = nodeNum * (nodeNum - 1) / 2;
+    cudaMalloc((void**)&pred, flowNum * sizeof(double));
+    model->pred(index, pars, pred, data);
+    cost[index] = metrics->calc(data, pred, flowNum);
+    cudaFree(pred);
 }

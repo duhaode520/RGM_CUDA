@@ -13,3 +13,5 @@ enum CostTypeEnum {
     Regular, 
     P
 };
+
+const ModelTypeEnum MODEL_TYPE = ModelTypeEnum::Reversed_Gravity;

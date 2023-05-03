@@ -7,14 +7,16 @@
 class Model {
 private:
     // parse the particle parameters
-    virtual __device__ void parse(int index, double* par);
+    virtual __device__ __host__ void parse(int index, double* par);
 public:
     Model(){}
     ~Model(){}
 
    virtual __device__ void pred(int index, double* par, double* pred, Flow* data);
 
-   static Model* createModel(ModelTypeEnum type);
+   virtual std::string getResult(double* pars);
+
+   static Model* createModel(ModelTypeEnum type, int nodeNum, int dim);
 };
 
 class RGM : public Model {
@@ -37,11 +39,15 @@ protected:
      * @param par 
      * @return __device__ 
      */
-    __device__ void parse(int index, double* pars);
+    __device__ __host__ void parse(int index, double* pars);
 public:
     RGM(int nodeNum, int dim);
     ~RGM();
-    __device__ void pred(int index, double* pars, double* pred, Flow* data);
+
+    __device__  void pred(int index, double* pars, double* pred, Flow* data);
+
+    std::string getResult(double* pars);
+
 };
 
 class RGM_EXP : public RGM {
@@ -49,6 +55,7 @@ protected:
     static const int BETA_SCALE = 10;
     static const int FLOW_SCALE = 1;
 public:
+    RGM_EXP(int nodeNum, int dim);
 
     __device__ void pred(int index, double* pars, double* pred, Flow* data);
 };

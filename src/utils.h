@@ -15,4 +15,5 @@ double random01();
 
 void parseArgs(int argc, char* argv[]);
 
+
 #endif

@@ -22,15 +22,9 @@
 #include "utils.h"
 #include "Particle.h"
 #include "Logger.h"
+#include "Model.cuh"
 
 using namespace std;
-
-
-/**
- * *注意: 在sample_code/mixed_test的结果显示
- * *编译时并不需要对代码做任何额外的改动即可自动混合C++和CUDA
- * *唯一的需要是在编译时nvcc编译.cu, g++编译.cpp
- */ 
 
 int main(int argc, char* argv[]) {
     parseArgs(argc, argv);
@@ -53,12 +47,12 @@ int main(int argc, char* argv[]) {
         } else {
             Ppar[i].initialize(dataConfig.cDim);
         }
-        Ppar[i].setCost(CostTypeEnum::P,
-            ModelTypeEnum::Reversed_Gravity, MetricsTypeEnum::RMSE);
+        Ppar[i].setCost(CostTypeEnum::P, MetricsTypeEnum::RMSE);
+        Ppar[i].setModel(MODEL_TYPE);
     }
     Qpar.initialize(dataConfig.dim);
-    Qpar.setCost(CostTypeEnum::Regular,
-        ModelTypeEnum::Reversed_Gravity, MetricsTypeEnum::RMSE);
+    Qpar.setCost(CostTypeEnum::Regular, MetricsTypeEnum::RMSE);
+    Qpar.setModel(MODEL_TYPE);
 
     logger.printSessionTime("Initialization");
 
@@ -69,14 +63,24 @@ int main(int argc, char* argv[]) {
             Ppar[s].train(datacache);
             logger.log("Iter:", iter, "PSwarm:", s, "P GbestCost:", Ppar[s].getGbestCost());
         }
-        exchange();
+        // exchange();
         Qpar.train(datacache);
         logger.log("Iter:", iter, "Q GbestCost:", Qpar.getGbestCost(), 
             "Gbest Beta:", Qpar.getGbestBeta()); 
-        exchange();
+        // exchange();
     }
-    
-    saveResults();
+    logger.printSessionTime("Training");
+
+    #pragma region output
+    logger.log(Qpar.getResult());
+
+    double cost[Qpar.MetricsNum];
+    Qpar.predictCost(datacache, cost);
+    logger.log("Predict RMSE:", cost[0], "Predict R2:", cost[1]);
+
+    #pragma endregion
+
+
     #pragma region release
 
     delete[] datacache;
