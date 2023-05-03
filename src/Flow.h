@@ -4,8 +4,6 @@
 #include "DataConfig.h"
 
 class Flow {
-private:
-	/* data */
 public:
 	int src;
 	int dest;
@@ -15,7 +13,7 @@ public:
 	Flow() {};
 	~Flow() ;
 
-	static int* tflow;  
+	static int* tflow ;  
 
 	static void loadData(Flow* data, std::string filename);
 };

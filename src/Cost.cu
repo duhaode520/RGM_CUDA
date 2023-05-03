@@ -15,28 +15,33 @@ Cost::~Cost() {
     delete metrics;
 }
 
-void Cost::calculate(Particle* particles, double* cost, Flow* data) {
+
+__global__ void kernelWrapper(Cost* costFunc, double* pars, double* cost, Flow* data) {
+    costFunc->execute(pars, cost, data);
+}
+
+void Cost::calculate(double** pars, int parNum, Flow* data, double* cost) {
     
     // generate linear array
-    double* LPar = new double[particles->Npar * particles->dim];
-    for (int i = 0; i < particles->Npar; i++) {
-        for (int j = 0; j < particles->dim; j++) {
-            LPar[i * particles->dim + j] = particles->Par[i][j];
+    double* LPar = new double[N_PAR * dim];
+    for (int i = 0; i < N_PAR; i++) {
+        for (int j = 0; j < dim; j++) {
+            LPar[i * dim + j] = pars[i][j];
         }
     }
 
     // allocate memory on GPU
     double* d_Par;
     double* d_cost;
-    cudaMalloc((void**)&d_Par, particles->Npar * dim * sizeof(double));
-    cudaMalloc((void**)&d_cost, particles->Npar * sizeof(double));
+    cudaMalloc((void**)&d_Par, N_PAR * dim * sizeof(double));
+    cudaMalloc((void**)&d_cost, N_PAR * sizeof(double));
     
     // copy data from CPU to GPU
-    cudaMemcpy(d_Par, LPar, particles->Npar * dim * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_Par, LPar, N_PAR * dim * sizeof(double), cudaMemcpyHostToDevice);
 
-    execute<<<(particles->Npar + (THREADS_PER_BLOCK + 1)) / THREADS_PER_BLOCK, THREADS_PER_BLOCK>>>
-    (d_Par, cost, data);
-    cudaMemcpy(cost, d_cost, particles->Npar * sizeof(double), cudaMemcpyDeviceToHost);
+    kernelWrapper<<<(N_PAR + (THREADS_PER_BLOCK + 1)) / THREADS_PER_BLOCK, THREADS_PER_BLOCK>>>
+    (this, d_Par, cost, data);
+    cudaMemcpy(cost, d_cost, N_PAR * sizeof(double), cudaMemcpyDeviceToHost);
 
     // release memory
     cudaFree(d_Par);
@@ -58,7 +63,7 @@ void Cost::predict(double* pars, Flow* data, int metricsSize, MetricsTypeEnum me
 }
 
 // 对应的是 gh 代码的 cost
-__global__ void RegularCost::execute(double* pars, double *cost, Flow* data) {
+__device__ void RegularCost::execute(double* pars, double *cost, Flow* data) {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
     double* pred;
     int flowNum = nodeNum * (nodeNum - 1) / 2;
@@ -76,7 +81,7 @@ PCost::PCost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType)
     : Cost(nodeNum, dim, model, metricsType) {
 }
 
-__global__ void PCost::execute(double* pars, double* cost, Flow* data) {
+__device__ void PCost::execute(double* pars, double* cost, Flow* data) {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
     double* pred;
     int flowNum = nodeNum * (nodeNum - 1) / 2;

@@ -5,6 +5,7 @@
 #include "Flow.h"
 #include "Cost.cuh"
 #include "consts.h"
+#include "PSOConfig.h"
 
 class Particle {
 private:
@@ -13,13 +14,13 @@ private:
     int dim; // dimension of particles
     double** Par;
     double** Pbest;
-    double Pbest_cost[Npar];
+    double Pbest_cost[N_PAR];
     double* Lpar;
-    double cost[Npar];
+    double cost[N_PAR];
 
     double* Gbest;
     double Gbest_cost;
-    Cost costFunction;
+    Cost* costFunction;
     Model* model;
     int Gbest_id;
 
@@ -63,16 +64,16 @@ public:
 
     std::string getResult();
     
-    static const double Xmin = 0.001;
-    static const double Xmax = 100000000;
-    static const double Xrandmin = 5;
-    static const double Xrandmax = 70;
-    static const int Npar = 4096;// Number of particles each swarm
-    static const double alpha = 0.75;
-    static const double pjump = 0.001;
-    static const double SCALE = 1;
-    static const int Maxiter = 3000;
-    static const int MetricsNum = 2;
+    // static constexpr double Xmin = 0.001;
+    // static constexpr double Xmax = 100000000;
+    // static constexpr double Xrandmin = 5;
+    // static constexpr double Xrandmax = 70;
+    // static constexpr int Npar = 4096;// Number of particles each swarm
+    // static constexpr double alpha = 0.75;
+    // static constexpr double pjump = 0.001;
+    // static constexpr double SCALE = 1;
+    // static constexpr int Maxiter = 3000;
+    static constexpr int MetricsNum = 2;
 
     friend class Cost;
 };

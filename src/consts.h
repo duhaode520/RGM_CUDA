@@ -1,3 +1,5 @@
+#ifndef CONSTS_H
+#define CONSTS_H
 enum ModelTypeEnum {
     Reversed_Gravity,
     Reversed_Gravity_Exp
@@ -15,3 +17,4 @@ enum CostTypeEnum {
 };
 
 const ModelTypeEnum MODEL_TYPE = ModelTypeEnum::Reversed_Gravity;
+#endif

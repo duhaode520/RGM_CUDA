@@ -13,7 +13,7 @@ Metrics* Metrics::createMetrics(MetricsTypeEnum type) {
     }
 }
 
-__device__ double RMSEMetric::calc(Flow* data, double* pred, int size) {
+__device__ __host__ double RMSEMetric::calc(Flow* data, double* pred, int size) {
     double sum = 0;
     for (int i = 0; i < size; i++) {
         sum += (data[i].flow - pred[i]) * (data[i].flow - pred[i]);
@@ -21,7 +21,7 @@ __device__ double RMSEMetric::calc(Flow* data, double* pred, int size) {
     return sqrt(sum / size);
 }
 
-__device__ double RsquaredMetric::calc(Flow* data, double* pred, int size) {
+__device__ __host__ double RsquaredMetric::calc(Flow* data, double* pred, int size) {
     double mean = 0;
     for (int i = 0; i < size; i++) {
         mean += data[i].flow;
@@ -35,6 +35,5 @@ __device__ double RsquaredMetric::calc(Flow* data, double* pred, int size) {
         ss_res += (data[i].flow - pred[i]) * (data[i].flow - pred[i]);
     }
     return 1 - ss_res / ss_tot;
-
 }
 

@@ -1,6 +1,8 @@
 #include "Flow.h"
 #include <iostream>
 #include <fstream>
+int* Flow::tflow = nullptr; // static member must be initialized outside the class
+
 Flow::~Flow() {
 
 }

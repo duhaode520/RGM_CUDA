@@ -41,10 +41,10 @@ void parseArgs(int argc, char *argv[])
             std::string type = argv[2];
             if (type == "county") {
                 dataConfig.load("configs/county.ini");
-                dataConfig.dataType='county';
+                dataConfig.dataType="county";
             } else if (type == "city") {
                 dataConfig.load("configs/city.ini");
-                dataConfig.dataType='city';
+                dataConfig.dataType="city";
             } else {
                 std::cerr << "Invalid type argument. Type argument must be county or city" << std::endl;
             }

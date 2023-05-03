@@ -6,10 +6,10 @@ void Logger::log_start(std::ostream &out, DataConfig dataConfig) {
 
     out << "Time: " << dt << std::endl;
     out << "Nodes: " << dataConfig.nodeNum << " Flows: " << dataConfig.flowNum 
-        << " Npar: " << Particle::Npar << " MaxIter: " << Particle::Maxiter << std::endl;
-    out << "Xmin: " << Particle::Xmin << " Xmax: " << Particle::Xmax 
-        << " Xrandmin: " << Particle::Xrandmin << " Xrandmax:" << Particle::Xrandmax << std::endl;
-    out << "alpha: " << Particle::alpha << " pjump: " << Particle::pjump 
+        << " Npar: " << N_PAR << " MaxIter: " << MAX_ITER << std::endl;
+    out << "Xmin: " << X_MIN << " Xmax: " << X_MAX 
+        << " Xrandmin: " << X_RAND_MIN << " Xrandmax:" << X_RAND_MAX << std::endl;
+    out << "alpha: " << ALPHA  << " pjump: " << P_JUMP 
         << " Number of P-Swarm groups: " << dataConfig.PSwarmNum << " CDIMS: " << dataConfig.cDim << " RDIMS: " << dataConfig.rDim << std::endl;
     out << "flowscale: " << dataConfig.flowScale << " distscale: " << dataConfig.distScale << std::endl;
 }
@@ -38,19 +38,19 @@ void Logger::printSessionTime(std::string sessionName) {
     tprev = tend;
 }
 
-template <typename T, typename... Args>
-void Logger::logItem(T arg, Args... args) {
-    std::cout << arg << " ";
-    ofstream << arg << " ";
-    log(args...);
-}
+// template <typename T, typename... Args>
+// void Logger::logItem(T arg, Args... args) {
+//     std::cout << arg << " ";
+//     ofstream << arg << " ";
+//     log(args...);
+// }
 
-void Logger::logItem() {
-    std::cout << std::endl;
-    ofstream << std::endl;
-}
+// void Logger::logItem() {
+//     std::cout << std::endl;
+//     ofstream << std::endl;
+// }
 
-template <typename... Args>
-void Logger::log(Args... args) {
-    logItem(args...);
-}
+// template <typename... Args>
+// void Logger::log(Args... args) {
+//     logItem(args...);
+// }

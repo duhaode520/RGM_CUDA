@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
 
     int Crossid;
     int iter = 0;
-    for (int iter = 0; iter < Maxiter; iter++) {
+    for (int iter = 0; iter < MAX_ITER; iter++) {
         for (int s = 0; s < dataConfig.PSwarmNum; s++) {
             Ppar[s].train(datacache);
             logger.log("Iter:", iter, "PSwarm:", s, "P GbestCost:", Ppar[s].getGbestCost());

@@ -1,15 +1,16 @@
 #ifndef COST_H
 #define COST_H
 #include "Flow.h"
-#include "Particle.h"
 #include "Metrics.cuh"
 #include "PSOConfig.h"
 #include "Model.cuh"
 #include "consts.h"
+#include <cuda_runtime.h>
+
+
 
 /**
  * @brief parent class for all cost functions
- * @todo Model 和 Cost 现在是完全一一对应的，未来希望能把Model独立出来处理
  */
 class Cost {
 protected:
@@ -19,23 +20,24 @@ protected:
     int nodeNum;
     int dim;
 
-    __global__ virtual void execute(double* pars, double* cost, Flow* data);
+    __device__ virtual void execute(double* pars, double* cost, Flow* data) = 0;
 
     static const int THREADS_PER_BLOCK = 64; // thread number per block used in kernel function
 
 public:
     Cost() {}
     Cost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType); 
-    ~Cost() {}
+    ~Cost(); 
     
     /**
      * @brief Calculate the cost of particles
      * 
-     * @param par all particles
+     * @param pars all particles parameters
+     * @param parNum the number of particles
      * @param cost return the cost of each particle 
      * @param data flow datas
      */
-    void calculate(Particle* par, double* cost, Flow* data); // TODO: 从 Particle 解耦
+    void calculate(double** pars, int parNum, Flow* data, double* cost);
     
     /**
      * @brief predict the cost of a particle
@@ -48,12 +50,13 @@ public:
      */
     void predict(double* pars, Flow* data, int metricsSize, MetricsTypeEnum metricsTypes[], double* cost);
     
-
+    friend __global__ void kernelWrapper(Cost* costFunc, double* pars, double* cost, Flow* data);
 };
+__global__ void kernelWrapper(Cost* costFunc, double* pars, double* cost, Flow* data);
 
 class RegularCost : public Cost {
 protected:
-    __global__ void execute(double* par, double* cost, Flow* data);
+    __device__ void execute(double* par, double* cost, Flow* data) override;
 
 public:
     RegularCost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType); 
@@ -61,7 +64,7 @@ public:
 
 class PCost : public Cost {
 protected:
-    __global__ void execute(double* par, double* cost, Flow* data);
+    __device__ void execute(double* par, double* cost, Flow* data) override;
 
 public:
     PCost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType); 
