@@ -32,10 +32,10 @@ void Particle::initialize(int dim) {
 void Particle::setCost(CostTypeEnum costType, MetricsTypeEnum metricsType) {
     switch (costType) {
     case CostTypeEnum::Regular:
-        this->costFunction = new RegularCost(dataConfig.nodeNum, dim, model, metricsType);  
+        this->costFunction = new RegularCost(dataConfig->nodeNum, dim, model, metricsType);  
         break;
     case CostTypeEnum::P:
-        this->costFunction = new PCost(dataConfig.nodeNum, dim, model, metricsType);  
+        this->costFunction = new PCost(dataConfig->nodeNum, dim, model, metricsType);  
         break;
     default:
         throw "Unknown Cost Type";
@@ -44,14 +44,13 @@ void Particle::setCost(CostTypeEnum costType, MetricsTypeEnum metricsType) {
 }
 
 void Particle::setModel(ModelTypeEnum modelType) {
-    this->model = Model::createModel(modelType, dataConfig.nodeNum, dim);
+    this->model = Model::createModel(modelType, dataConfig->nodeNum, dim);
 }
 
 void Particle::train(Flow* data) {
     if (!cost_init) {
         cost_init = true;
         costInitialize(data);
-        return;
     }
     costFunction->calculate(Par, N_PAR, data, cost);
     bestUpdate();
@@ -74,8 +73,10 @@ void Particle::costInitialize(Flow *data) {
 }
 
 void Particle::bestUpdate() {
+    std::cout << "Cost: ";
     for (int p = 0; p < N_PAR; p++) {
         int cur_cost = cost[p];
+        std::cout << cur_cost << " ";
         if (cur_cost < Pbest_cost[p]) {
             for (int d = 0; d < dim; d++) {
                 Pbest[p][d] = Par[p][d];
@@ -91,6 +92,7 @@ void Particle::bestUpdate() {
             Gbest_id = p;
         }
     }
+    std::cout << std::endl;
 }
 
 void Particle::swarmUpdate() {

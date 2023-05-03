@@ -27,30 +27,31 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
+    dataConfig = new DataConfig();
     parseArgs(argc, argv);
-    Logger logger(dataConfig.outputFile);
+    Logger logger(dataConfig->outputFile);
     logger.logStartInfo(dataConfig);
 
-    Flow* datacache = new Flow[dataConfig.flowNum];
-    Flow::tflow = new int[dataConfig.dim];
-    Flow::loadData(datacache, dataConfig.dataFile);   
+    Flow* datacache = new Flow[dataConfig->flowNum];
+    Flow::tflow = new int[dataConfig->dim];
+    Flow::loadData(datacache, dataConfig->dataFile);   
     logger.printSessionTime("Data Loading");
 
-    Particle Ppar[dataConfig.PSwarmNum];
+    Particle Ppar[dataConfig->PSwarmNum];
     Particle Qpar;
 
-    for (int i = 0; i < dataConfig.PSwarmNum; i++) {
-        if (i == dataConfig.PSwarmNum - 1) {
+    for (int i = 0; i < dataConfig->PSwarmNum; i++) {
+        if (i == dataConfig->PSwarmNum - 1) {
             // 最后一个粒子的维度可能不是cDim
-            int lastDim = dataConfig.dim - i * dataConfig.cDim;
+            int lastDim = dataConfig->dim - i * dataConfig->cDim;
             Ppar[i].initialize(lastDim);
         } else {
-            Ppar[i].initialize(dataConfig.cDim);
+            Ppar[i].initialize(dataConfig->cDim);
         }
         Ppar[i].setCost(CostTypeEnum::P, MetricsTypeEnum::RMSE);
         Ppar[i].setModel(MODEL_TYPE);
     }
-    Qpar.initialize(dataConfig.dim);
+    Qpar.initialize(dataConfig->dim);
     Qpar.setCost(CostTypeEnum::Regular, MetricsTypeEnum::RMSE);
     Qpar.setModel(MODEL_TYPE);
 
@@ -59,10 +60,10 @@ int main(int argc, char* argv[]) {
     int Crossid;
     int iter = 0;
     for (int iter = 0; iter < MAX_ITER; iter++) {
-        for (int s = 0; s < dataConfig.PSwarmNum; s++) {
-            Ppar[s].train(datacache);
-            logger.log("Iter:", iter, "PSwarm:", s, "P GbestCost:", Ppar[s].getGbestCost());
-        }
+        // for (int s = 0; s < dataConfig->PSwarmNum; s++) {
+        //     Ppar[s].train(datacache);
+        //     logger.log("Iter:", iter, "PSwarm:", s, "P GbestCost:", Ppar[s].getGbestCost());
+        // }
         // exchange();
         Qpar.train(datacache);
         logger.log("Iter:", iter, "Q GbestCost:", Qpar.getGbestCost(), 
@@ -85,7 +86,7 @@ int main(int argc, char* argv[]) {
 
     delete[] datacache;
     delete[] Flow::tflow;
-
+    delete dataConfig;
     #pragma endregion
     return 0;
 }

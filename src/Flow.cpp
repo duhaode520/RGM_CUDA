@@ -8,6 +8,7 @@ Flow::~Flow() {
 }
 
 void Flow::loadData(Flow* data, std::string filename) {
+    std::cout << "Loading data from " << filename << std::endl;
     std::ifstream fdata(filename);
     if (!fdata.is_open()) {
         std::cout << "Error opening file " << filename << std::endl;
@@ -15,10 +16,12 @@ void Flow::loadData(Flow* data, std::string filename) {
     }
     int i = 0;
     while (fdata >> data[i].src >> data[i].dest >> data[i].flow >> data[i].dist) {
-        i++;
+        data[i].flow /= dataConfig->flowScale;
+        data[i].dist /= dataConfig->distScale;
         tflow[data[i].src] += data[i].flow;
-        tflow[dataConfig.nodeNum + data[i].dest] += data[i].flow;
+        tflow[dataConfig->nodeNum + data[i].dest] += data[i].flow;
+        i++;
     }
-    tflow[dataConfig.dim - 1] = 1; // set the last element to 1, which represents beta in RGM
+    tflow[dataConfig->dim - 1] = 1; // set the last element to 1, which represents beta in RGM
     fdata.close();
 }

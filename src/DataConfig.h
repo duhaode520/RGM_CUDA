@@ -33,6 +33,6 @@ public:
 
 };
 
-extern DataConfig dataConfig;
+extern DataConfig* dataConfig;
 #endif 
 

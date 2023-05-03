@@ -28,6 +28,7 @@ void parseArgs(int argc, char *argv[])
 {
     if (argc > 3) {
         std::cerr << "More than 2 arguments are not supported" << std::endl;
+        throw std::invalid_argument("More than 2 arguments are not supported");
     } else if (argc == 3) {
         std::string arg = argv[1];
         if (arg == "-h" || arg == "--help") {
@@ -40,11 +41,13 @@ void parseArgs(int argc, char *argv[])
         } else if (arg == "-t" || arg == "--type") {
             std::string type = argv[2];
             if (type == "county") {
-                dataConfig.load("configs/county.ini");
-                dataConfig.dataType="county";
+                std::cout << "Running with county data" << std::endl;
+                dataConfig->load("./configs/county.ini");
+                dataConfig->dataType="county";
             } else if (type == "city") {
-                dataConfig.load("configs/city.ini");
-                dataConfig.dataType="city";
+                std::cout << "Running with city data" << std::endl;
+                dataConfig->load("./configs/city.ini");
+                dataConfig->dataType="city";
             } else {
                 std::cerr << "Invalid type argument. Type argument must be county or city" << std::endl;
             }
@@ -52,5 +55,7 @@ void parseArgs(int argc, char *argv[])
             std::cerr << "Invalid argument" << std::endl;
             exit(1);
         }
+    } else {
+        throw std::invalid_argument("Too few arguments");
     }
 }

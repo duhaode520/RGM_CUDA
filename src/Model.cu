@@ -41,7 +41,7 @@ __device__ __host__ void RGM::parse(int index, double* pars) {
 __device__ __host__ void RGM::pred(int index, double* pars, double* pred, Flow* data) {
     // 从 particle 的维度中解析出需要的 Push Attr beta
     parse(index, pars);
-    // TODO: 这一步其实是可以用 CUDA 2D 的一些手段搞成并行的，但是我懒得学
+// TODO: 这一步其实是可以用 CUDA 2D 的一些手段搞成并行的，但是我懒得学
     for (int i = 0; i < flowNum; i++) {
         int src = data[i].src;
         int dest = data[i].dest;
@@ -56,7 +56,7 @@ std::string RGM::getResult(double* pars) {
     std::stringstream ss;
     // int extreme = -1;
     for (int i = 0; i < nodeNum; i++) {
-        ss << dataConfig.nodeNames[i] << " " << Push[i] << " " << Attr[i] << std::endl;
+        ss << dataConfig->nodeNames[i] << " " << Push[i] << " " << Attr[i] << std::endl;
     }
     ss << "Beta " << beta << std::endl;
     return ss.str();

@@ -18,7 +18,7 @@ private:
     clock_t tstart;
     std::ofstream ofstream;
     clock_t tprev;
-    void log_start(std::ostream& out, DataConfig dataConfig);
+    void log_start(std::ostream& out, DataConfig* dataConfig);
     
     template <typename T, typename... Args>  // 所有模板函数写在头文件里才能找见
     void logItem(T arg, Args... args) {
@@ -35,7 +35,7 @@ private:
 public:
     Logger(std::string outputfile);
     ~Logger();
-    void logStartInfo(DataConfig dataConfig);
+    void logStartInfo(DataConfig* dataConfig);
     void printSessionTime(std::string sessionName);
 
     template <typename... Args>

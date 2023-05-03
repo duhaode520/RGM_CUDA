@@ -4,7 +4,7 @@
 #include <cmath>
 
 
-DataConfig dataConfig;
+DataConfig* dataConfig;
 
 DataConfig::DataConfig()
 {
@@ -31,10 +31,10 @@ void DataConfig::load(std::string filename) {
     dataType = config["dataType"];
     dataFile = config["dataFile"];
     dim = 2 * nodeNum + 1;
-    PSwarmNum = int(ceil(1.0 * dim / dataConfig.cDim));
     cDim = std::stoi(config["cDim"]);
-    rDim = std::stoi(config["rDim"]);
-    flowNum = std::stoi(config["flowNum"]);
+
+    PSwarmNum = int(ceil(1.0 * dim / cDim));
+    flowNum = nodeNum * (nodeNum - 1) / 2;
     flowScale = std::stoi(config["flowScale"]);
     distScale = std::stoi(config["distScale"]);
     outputFile = config["outputFile"];
