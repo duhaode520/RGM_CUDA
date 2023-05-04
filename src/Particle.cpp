@@ -30,21 +30,24 @@ void Particle::initialize(int dim) {
 }
 
 void Particle::setCost(CostTypeEnum costType, MetricsTypeEnum metricsType) {
-    switch (costType) {
-    case CostTypeEnum::Regular:
-        this->costFunction = new RegularCost(dataConfig->nodeNum, dim, model, metricsType);  
-        break;
-    case CostTypeEnum::P:
-        this->costFunction = new PCost(dataConfig->nodeNum, dim, model, metricsType);  
-        break;
-    default:
-        throw "Unknown Cost Type";
-        break;
-    }
+    Cost::create(costFunction, costType, dataConfig->nodeNum, dim, model, metricsType);
 }
 
 void Particle::setModel(ModelTypeEnum modelType) {
-    this->model = Model::createModel(modelType, dataConfig->nodeNum, dim);
+    Model::create(this->model, modelType, dataConfig->nodeNum, dim);
+}
+
+Particle::~Particle() {
+    delete [] Gbest;
+    for (int i = 0; i < N_PAR; i++) {
+        delete [] Par[i];
+        delete [] Pbest[i];
+    }
+    delete [] Par;
+    delete [] Pbest;
+
+    Model::destroy(model);
+    Cost::destroy(costFunction);
 }
 
 void Particle::train(Flow* data) {
@@ -133,14 +136,3 @@ std::string Particle::getResult() {
     return model->getResult(Gbest);
 }
 
-Particle::~Particle() {
-    delete [] Gbest;
-    for (int i = 0; i < N_PAR; i++) {
-        delete [] Par[i];
-        delete [] Pbest[i];
-    }
-    delete [] Par;
-    delete [] Pbest;
-
-    delete costFunction;
-}

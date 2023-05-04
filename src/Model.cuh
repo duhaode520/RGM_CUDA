@@ -17,7 +17,9 @@ public:
 
    virtual std::string getResult(double* pars) = 0;
 
-   static Model* createModel(ModelTypeEnum type, int nodeNum, int dim);
+   static void create(Model* model, ModelTypeEnum type, int nodeNum, int dim);
+
+   static void destroy(Model* model);
 };
 
 class RGM : public Model {
@@ -29,7 +31,7 @@ protected:
     
     double* Push;
     double* Attr;
-    double beta;
+    double* beta; // beta value for RGM, not an array
 
     static constexpr int BETA_SCALE = 10;
     static constexpr int FLOW_SCALE = 1;

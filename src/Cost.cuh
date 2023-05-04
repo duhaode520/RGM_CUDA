@@ -49,6 +49,10 @@ public:
      * @param cost the costs of different metrics of the particle
      */
     void predict(double* pars, Flow* data, int metricsSize, MetricsTypeEnum metricsTypes[], double* cost);
+
+    static void create(Cost* cost, CostTypeEnum costType, int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType);
+
+    static void destroy(Cost* cost);
     
     friend __global__ void kernelWrapper(Cost* costFunc, double* pars, double* cost, Flow* data);
 };

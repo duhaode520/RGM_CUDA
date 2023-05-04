@@ -1,8 +1,8 @@
 # 定义编译器和编译选项
 CXX = nvcc
 NVCC = nvcc
-CXXFLAGS = -g -std=c++11
-NVCCFLAGS = -g -std=c++11
+CXXFLAGS = -g -std=c++11 -rdc=true -G
+NVCCFLAGS = -g -std=c++11 -rdc=true -G
 
 # 源文件目录和目标文件目录
 SRCDIR = src

@@ -17,8 +17,9 @@ public:
 
     virtual __device__ __host__ double calc(Flow* data, double* pred, int size) = 0;
 
-    static Metrics* createMetrics(MetricsTypeEnum type);
+    static void create(Metrics* metrics, MetricsTypeEnum type);
 
+    static void destroy(Metrics* metrics);
 };
 
 class RMSEMetric : public Metrics {
