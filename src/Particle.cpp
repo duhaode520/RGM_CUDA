@@ -30,11 +30,11 @@ void Particle::initialize(int dim) {
 }
 
 void Particle::setCost(CostTypeEnum costType, MetricsTypeEnum metricsType) {
-    Cost::create(costFunction, costType, dataConfig->nodeNum, dim, model, metricsType);
+    costFunction = Cost::create(costType, dataConfig->nodeNum, dim, model, metricsType);
 }
 
 void Particle::setModel(ModelTypeEnum modelType) {
-    Model::create(this->model, modelType, dataConfig->nodeNum, dim);
+    this->model = Model::create(modelType, dataConfig->nodeNum, dim);
 }
 
 Particle::~Particle() {
@@ -46,8 +46,8 @@ Particle::~Particle() {
     delete [] Par;
     delete [] Pbest;
 
-    Model::destroy(model);
-    Cost::destroy(costFunction);
+    delete model;
+    delete costFunction;
 }
 
 void Particle::train(Flow* data) {

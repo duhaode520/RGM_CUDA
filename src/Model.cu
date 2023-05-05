@@ -5,25 +5,21 @@
 
 #include <sstream>
 
-void Model::create(Model* model, ModelTypeEnum type, int nodeNum, int dim) {
+Model* Model::create(ModelTypeEnum type, int nodeNum, int dim) {
     switch (type) {
-        case ModelTypeEnum::Reversed_Gravity:
-            cudaMallocManaged(&model, sizeof(RGM));
-            new(model) RGM(nodeNum, dim);
-            break;
-        case ModelTypeEnum::Reversed_Gravity_Exp:
-            cudaMallocManaged(&model, sizeof(RGM_EXP));
-            new(model) RGM_EXP(nodeNum, dim);
-            break;
-        default:
-            throw std::runtime_error("Unknown model type");
+    case ModelTypeEnum::Reversed_Gravity:
+        return new RGM(nodeNum, dim);
+    case ModelTypeEnum::Reversed_Gravity_Exp:
+        return new RGM_EXP(nodeNum, dim);
+    default:
+        throw std::runtime_error("Unknown model type");
     }
 }
 
-void Model::destroy(Model* model) {
-    model->~Model();
-    cudaFree(model);
-}
+// void Model::destroy(Model* model) {
+//     model->~Model();
+//     cudaFree(model);
+// }
 
 RGM::RGM(int nodeNum, int dim) {
     this->nodeNum = nodeNum;
@@ -68,9 +64,22 @@ std::string RGM::getResult(double* pars) {
     for (int i = 0; i < nodeNum; i++) {
         ss << dataConfig->nodeNames[i] << " " << Push[i] << " " << Attr[i] << std::endl;
     }
-    ss << "Beta " << *beta << std::endl;
+    ss << "Beta " <<*beta << std::endl;
     return ss.str();
 }   
+
+Model* RGM::prepareForDevice() {
+    RGM* d_model;
+    cudaMalloc((void**)&d_model, sizeof(RGM));
+    cudaMemcpy(d_model, this, sizeof(RGM), cudaMemcpyHostToDevice);
+    // 这里目前 RGM 有的剩下的几个指针项 Push Attr Beta
+    // 是用 cudaMallocManaged 分配的，所以不需要再次拷贝
+    return d_model;
+} 
+
+void RGM::leaveDevice() {
+    // temporarily do nothing.
+}
 
 RGM_EXP::RGM_EXP(int nodeNum, int dim) : RGM(nodeNum, dim) {
 }

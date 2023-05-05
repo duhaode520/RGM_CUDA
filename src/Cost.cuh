@@ -22,12 +22,17 @@ protected:
 
     __device__ virtual void execute(double* pars, double* cost, Flow* data) = 0;
 
+
     static const int THREADS_PER_BLOCK = 64; // thread number per block used in kernel function
 
 public:
     Cost() {}
     Cost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType); 
+    Cost(int nodeNum, int dim, Model* model, Metrics* metrics);
     ~Cost(); 
+    virtual Cost* prepareForDevice() = 0;
+
+    void leaveDevice();
     
     /**
      * @brief Calculate the cost of particles
@@ -50,9 +55,9 @@ public:
      */
     void predict(double* pars, Flow* data, int metricsSize, MetricsTypeEnum metricsTypes[], double* cost);
 
-    static void create(Cost* cost, CostTypeEnum costType, int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType);
+    static Cost* create(CostTypeEnum costType, int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType);
 
-    static void destroy(Cost* cost);
+    // static void destroy(Cost* cost);
     
     friend __global__ void kernelWrapper(Cost* costFunc, double* pars, double* cost, Flow* data);
 };
@@ -63,7 +68,11 @@ protected:
     __device__ void execute(double* par, double* cost, Flow* data) override;
 
 public:
-    RegularCost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType); 
+    RegularCost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType) 
+        : Cost(nodeNum, dim, model, metricsType) {}; 
+    RegularCost(int nodeNum, int dim, Model* model, Metrics* metrics) 
+        : Cost(nodeNum, dim, model, metrics) {};
+    Cost* prepareForDevice();
 };
 
 class PCost : public Cost {
@@ -71,7 +80,11 @@ protected:
     __device__ void execute(double* par, double* cost, Flow* data) override;
 
 public:
-    PCost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType); 
+    PCost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType) 
+        : Cost(nodeNum, dim, model, metricsType) {}; 
+    PCost(int nodeNum, int dim, Model* model, Metrics* metrics) 
+        : Cost(nodeNum, dim, model, metrics) {};
+    Cost* prepareForDevice();
 };
 
 

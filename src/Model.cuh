@@ -6,20 +6,26 @@
 #include <cuda_runtime.h>
 
 class Model {
-private:
+protected:
     // parse the particle parameters
     virtual __device__ __host__ void parse(int index, double* par) = 0;
+
 public:
     Model(){}
     ~Model(){}
 
-   virtual __device__ __host__ void pred(int index, double* par, double* pred, Flow* data) = 0;
+    virtual __device__ __host__ void pred(int index, double* par, double* pred, Flow* data) = 0;
 
-   virtual std::string getResult(double* pars) = 0;
+    virtual std::string getResult(double* pars) = 0;
 
-   static void create(Model* model, ModelTypeEnum type, int nodeNum, int dim);
+    virtual Model* prepareForDevice() = 0;
 
-   static void destroy(Model* model);
+    virtual void leaveDevice() = 0;
+
+    static Model* create(ModelTypeEnum type, int nodeNum, int dim);
+
+    
+//    static void destroy(Model* model);
 };
 
 class RGM : public Model {
@@ -43,6 +49,7 @@ protected:
      * @return __device__ 
      */
     __device__ __host__ void parse(int index, double* pars) override;
+
 public:
     RGM(int nodeNum, int dim);
     ~RGM();
@@ -51,6 +58,9 @@ public:
 
     std::string getResult(double* pars);
 
+    Model* prepareForDevice() ;
+    
+    void leaveDevice();
 };
 
 class RGM_EXP : public RGM {

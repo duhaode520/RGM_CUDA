@@ -2,25 +2,32 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
-void Metrics::create(Metrics* metrics, MetricsTypeEnum type) {
+Metrics* Metrics::create(MetricsTypeEnum type) {
     switch (type) {
     case MetricsTypeEnum::RMSE:
-        cudaMallocManaged((void**)&metrics, sizeof(RMSEMetric));
-        new (metrics) RMSEMetric();
-        break;
+        return new RMSEMetric();
     case MetricsTypeEnum::R2:
-        cudaMallocManaged((void**)&metrics, sizeof(RsquaredMetric));
-        new (metrics) RsquaredMetric();
-        break;
+        return new RsquaredMetric();
     default:
         throw std::runtime_error("Unknown metrics type");
     }
 }
 
-void Metrics::destroy(Metrics* metrics) {
-    metrics->~Metrics();
-    cudaFree(metrics);
+Metrics* Metrics::prepareForDevice() {
+    Metrics* deviceMetrics;
+    cudaMalloc((void**)&deviceMetrics, sizeof(Metrics));
+    cudaMemcpy(deviceMetrics, this, sizeof(Metrics), cudaMemcpyHostToDevice);
+    return deviceMetrics;
 }
+
+void Metrics::leaveDevice() {
+    // temporarily do nothing
+}
+
+// void Metrics::destroy(Metrics* metrics) {
+//     metrics->~Metrics();
+//     cudaFree(metrics);
+// }
 
 __device__ __host__ double RMSEMetric::calc(Flow* data, double* pred, int size) {
     double sum = 0;

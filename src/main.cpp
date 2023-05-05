@@ -23,6 +23,7 @@
 #include "Particle.h"
 #include "Logger.h"
 #include "Model.cuh"
+#include "cuda_runtime.h"
 
 using namespace std;
 
@@ -32,6 +33,7 @@ int main(int argc, char* argv[]) {
     Logger logger(dataConfig->outputFile);
     logger.logStartInfo(dataConfig);
 
+    cudaSetDevice(1);
     Flow* datacache = new Flow[dataConfig->flowNum];
     Flow::tflow = new int[dataConfig->dim];
     Flow::loadData(datacache, dataConfig->dataFile);   
@@ -48,12 +50,12 @@ int main(int argc, char* argv[]) {
         } else {
             Ppar[i].initialize(dataConfig->cDim);
         }
-        Ppar[i].setCost(CostTypeEnum::P, MetricsTypeEnum::RMSE);
         Ppar[i].setModel(MODEL_TYPE);
+        Ppar[i].setCost(CostTypeEnum::P, MetricsTypeEnum::RMSE);
     }
     Qpar.initialize(dataConfig->dim);
-    Qpar.setCost(CostTypeEnum::Regular, MetricsTypeEnum::RMSE);
     Qpar.setModel(MODEL_TYPE);
+    Qpar.setCost(CostTypeEnum::Regular, MetricsTypeEnum::RMSE);
 
     logger.printSessionTime("Initialization");
 

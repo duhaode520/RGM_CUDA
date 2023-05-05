@@ -9,7 +9,7 @@
  * 
  */
 class Metrics {
-private:
+protected:
     /* data */
 public:
     Metrics(/* args */) {}
@@ -17,9 +17,12 @@ public:
 
     virtual __device__ __host__ double calc(Flow* data, double* pred, int size) = 0;
 
-    static void create(Metrics* metrics, MetricsTypeEnum type);
+    static Metrics* create(MetricsTypeEnum type);
 
-    static void destroy(Metrics* metrics);
+    virtual Metrics* prepareForDevice();
+
+    void leaveDevice();
+    // static void destroy(Metrics* metrics);
 };
 
 class RMSEMetric : public Metrics {
