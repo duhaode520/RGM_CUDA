@@ -1,6 +1,7 @@
 #include "Flow.h"
 #include <iostream>
 #include <fstream>
+#include <cstring>
 int* Flow::tflow = nullptr; // static member must be initialized outside the class
 
 Flow::~Flow() {
@@ -9,6 +10,7 @@ Flow::~Flow() {
 
 void Flow::loadData(Flow* data, std::string filename) {
     std::cout << "Loading data from " << filename << std::endl;
+    memset(tflow, 0, dataConfig->dim * sizeof(int));
     std::ifstream fdata(filename);
     if (!fdata.is_open()) {
         std::cout << "Error opening file " << filename << std::endl;

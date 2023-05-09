@@ -7,8 +7,8 @@ class Flow {
 public:
 	int src;
 	int dest;
-	int flow;
-	float dist;
+	double flow;
+	double dist;
 
 	Flow() {};
 	~Flow() ;

@@ -33,6 +33,8 @@ int main(int argc, char* argv[]) {
     Logger logger(dataConfig->outputFile);
     logger.logStartInfo(dataConfig);
 
+    srand(time(NULL));
+
     cudaSetDevice(1);
     Flow* datacache = new Flow[dataConfig->flowNum];
     Flow::tflow = new int[dataConfig->dim];

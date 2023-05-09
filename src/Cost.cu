@@ -24,13 +24,12 @@ Cost::~Cost() {
 
 
 __global__ void kernelWrapper(CostConfig* config, double* pars, double* cost, Flow* data) {
-    // FIXME: 在 host创建的对象的虚函数在device上不能调用，因为虚函数表在host上，所以需要在device上创建对象
-    // https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html?highlight=inherit#data-members
-    // TODO: 所有的CUDA对象都需要在这个函数中创建
+    // 在 host创建的对象的虚函数在device上不能调用，因为虚函数表在host上，所以需要在device上创建对象
+    // 所有的CUDA对象都需要在这个函数中创建
     Model* model = Model::create(config->modelType, config->nodeNum, config->dim);
     Cost* costFunc = Cost::create(config->costType, config->nodeNum, config->dim, model, config->metricsType);
 
-    costFunc->execute(pars, cost, data); // 这个地方不work，关键原因是Cost的中有很多不在Cuda上的内存，所以不能直接调用
+    costFunc->execute(pars, cost, data); 
 
     delete model;
     delete costFunc;
@@ -45,7 +44,6 @@ void Cost::calculate(CostConfig config, double** pars, int parNum, Flow* data, d
             LPar[i * dim + j] = pars[i][j];
         }
     }
-    std::cout << typeid(*this).name() << std::endl;
     // allocate memory on GPU
     double* d_Par = NULL;
     double* d_cost = NULL;
@@ -65,6 +63,9 @@ void Cost::calculate(CostConfig config, double** pars, int parNum, Flow* data, d
     kernelWrapper<<<(N_PAR + (THREADS_PER_BLOCK + 1)) / THREADS_PER_BLOCK, THREADS_PER_BLOCK>>>
     (d_config, d_Par, d_cost, d_data);
     cudaDeviceSynchronize();
+
+    //* Debug test
+    // kernelWrapper<<<1,1>>> (d_config, d_Par, d_cost, d_data);
     cudaMemcpy(cost, d_cost, N_PAR * sizeof(double), cudaMemcpyDeviceToHost);
 
     // release memory

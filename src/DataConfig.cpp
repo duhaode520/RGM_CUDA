@@ -34,7 +34,7 @@ void DataConfig::load(std::string filename) {
     cDim = std::stoi(config["cDim"]);
 
     PSwarmNum = int(ceil(1.0 * dim / cDim));
-    flowNum = nodeNum * (nodeNum - 1) / 2;
+    flowNum = nodeNum * (nodeNum - 1);
     flowScale = std::stoi(config["flowScale"]);
     distScale = std::stoi(config["distScale"]);
     outputFile = config["outputFile"];

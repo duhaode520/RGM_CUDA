@@ -11,8 +11,8 @@ const double X_RAND_MAX = 70;
 const double ALPHA = 0.75;
 const double P_JUMP = 0.001;
 // const double SCALE = 1;
-// const double BETA_SCALE = 10;
-// const double MAX_BETA = 2;
+const double BETA_SCALE = 10;
+const double MAX_BETA = 2;
 
 
 #endif

@@ -39,7 +39,6 @@ protected:
     double* Attr;
     double* beta; // beta value for RGM, not an array
 
-    static constexpr int BETA_SCALE = 10;
     static constexpr int FLOW_SCALE = 1;
     /**
      * @brief parse the particle parameters for RGM

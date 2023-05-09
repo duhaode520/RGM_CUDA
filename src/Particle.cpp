@@ -81,10 +81,10 @@ void Particle::costInitialize(Flow *data) {
 }
 
 void Particle::bestUpdate() {
-    std::cout << "Cost: ";
+    // std::cout << "Cost: ";
     for (int p = 0; p < N_PAR; p++) {
         int cur_cost = cost[p];
-        std::cout << cur_cost << " ";
+        // std::cout << cur_cost << " ";
         if (cur_cost < Pbest_cost[p]) {
             for (int d = 0; d < dim; d++) {
                 Pbest[p][d] = Par[p][d];
@@ -100,7 +100,7 @@ void Particle::bestUpdate() {
             Gbest_id = p;
         }
     }
-    std::cout << std::endl;
+    // std::cout << std::endl;
 }
 
 void Particle::swarmUpdate() {
@@ -134,7 +134,7 @@ double Particle::getGbestCost() {
 }
 
 double Particle::getGbestBeta() {
-    return Gbest[dim - 1];
+    return Gbest[dim - 1] / BETA_SCALE;
 }
 
 std::string Particle::getResult() { 
