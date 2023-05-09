@@ -7,6 +7,7 @@
 #include "consts.h"
 #include "PSOConfig.h"
 
+
 class Particle {
 private:
     /* data */
@@ -20,8 +21,11 @@ private:
 
     double* Gbest;
     double Gbest_cost;
+
     Cost* costFunction;
     Model* model;
+    CostConfig config;
+
     int Gbest_id;
 
     bool cost_init = false;

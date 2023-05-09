@@ -3,6 +3,8 @@
 
 void Particle::initialize(int dim) {
     this->dim = dim;
+    config.nodeNum = dataConfig->nodeNum;
+    config.dim = dim;
 
     // 1. particles initialization
     Par = new double*[N_PAR];
@@ -31,10 +33,13 @@ void Particle::initialize(int dim) {
 
 void Particle::setCost(CostTypeEnum costType, MetricsTypeEnum metricsType) {
     costFunction = Cost::create(costType, dataConfig->nodeNum, dim, model, metricsType);
+    config.costType = costType;
+    config.metricsType = metricsType;
 }
 
 void Particle::setModel(ModelTypeEnum modelType) {
     this->model = Model::create(modelType, dataConfig->nodeNum, dim);
+    config.modelType = modelType;
 }
 
 Particle::~Particle() {
@@ -55,7 +60,7 @@ void Particle::train(Flow* data) {
         cost_init = true;
         costInitialize(data);
     }
-    costFunction->calculate(Par, N_PAR, data, cost);
+    costFunction->calculate(config, Par, N_PAR, data, cost);
     bestUpdate();
     swarmUpdate();
 }
@@ -69,7 +74,7 @@ void Particle::predictCost(Flow *data, double *cost) {
 
 void Particle::costInitialize(Flow *data) {
     // cost initialization
-    costFunction->calculate(Par, N_PAR, data, cost);
+    costFunction->calculate(config, Par, N_PAR, data, cost);
     memcpy(Pbest_cost, cost, sizeof(double) * N_PAR);
     Gbest_cost = Pbest_cost[0];
     Gbest_id = 0;

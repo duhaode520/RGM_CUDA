@@ -12,12 +12,12 @@ class Metrics {
 protected:
     /* data */
 public:
-    Metrics(/* args */) {}
-    ~Metrics() {}
+    __device__ __host__ Metrics(/* args */) {}
+    __device__ __host__ virtual ~Metrics() {}
 
     virtual __device__ __host__ double calc(Flow* data, double* pred, int size) = 0;
 
-    static Metrics* create(MetricsTypeEnum type);
+    static __device__ __host__ Metrics* create(MetricsTypeEnum type);
 
     virtual Metrics* prepareForDevice();
 

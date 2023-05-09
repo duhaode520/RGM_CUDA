@@ -11,8 +11,8 @@ protected:
     virtual __device__ __host__ void parse(int index, double* par) = 0;
 
 public:
-    Model(){}
-    ~Model(){}
+    __device__ __host__ Model(){}
+    __device__ __host__ virtual ~Model(){}
 
     virtual __device__ __host__ void pred(int index, double* par, double* pred, Flow* data) = 0;
 
@@ -22,7 +22,7 @@ public:
 
     virtual void leaveDevice() = 0;
 
-    static Model* create(ModelTypeEnum type, int nodeNum, int dim);
+    static __device__ __host__ Model* create(ModelTypeEnum type, int nodeNum, int dim);
 
     
 //    static void destroy(Model* model);
@@ -51,8 +51,8 @@ protected:
     __device__ __host__ void parse(int index, double* pars) override;
 
 public:
-    RGM(int nodeNum, int dim);
-    ~RGM();
+    __device__ __host__ RGM(int nodeNum, int dim);
+    __device__ __host__ virtual ~RGM();
 
     __device__  __host__ void pred(int index, double* pars, double* pred, Flow* data) override;
 
@@ -68,7 +68,7 @@ protected:
     static constexpr int BETA_SCALE = 10;
     static constexpr int FLOW_SCALE = 1;
 public:
-    RGM_EXP(int nodeNum, int dim);
+    __device__ __host__ RGM_EXP(int nodeNum, int dim);
 
     __device__ __host__ void pred(int index, double* pars, double* pred, Flow* data) override;
 };

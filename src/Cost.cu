@@ -23,16 +23,20 @@ Cost::~Cost() {
 }
 
 
-__global__ void kernelWrapper(Cost* costFunc, double* pars, double* cost, Flow* data) {
-    //TODO: prepare data for device, see 
-    // https://stackoverflow.com/questions/39006348/accessing-class-data-members-from-within-cuda-kernel-how-to-design-proper-host
-    // https://stackoverflow.com/questions/65325842/how-do-i-properly-implement-classes-whose-members-are-called-both-from-host-and?noredirect=1&lq=1
+__global__ void kernelWrapper(CostConfig* config, double* pars, double* cost, Flow* data) {
     // FIXME: 在 host创建的对象的虚函数在device上不能调用，因为虚函数表在host上，所以需要在device上创建对象
+    // https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html?highlight=inherit#data-members
+    // TODO: 所有的CUDA对象都需要在这个函数中创建
+    Model* model = Model::create(config->modelType, config->nodeNum, config->dim);
+    Cost* costFunc = Cost::create(config->costType, config->nodeNum, config->dim, model, config->metricsType);
+
     costFunc->execute(pars, cost, data); // 这个地方不work，关键原因是Cost的中有很多不在Cuda上的内存，所以不能直接调用
-    
+
+    delete model;
+    delete costFunc;
 }
 
-void Cost::calculate(double** pars, int parNum, Flow* data, double* cost) {
+void Cost::calculate(CostConfig config, double** pars, int parNum, Flow* data, double* cost) {
     
     // generate linear array
     double* LPar = new double[N_PAR * dim];
@@ -41,26 +45,25 @@ void Cost::calculate(double** pars, int parNum, Flow* data, double* cost) {
             LPar[i * dim + j] = pars[i][j];
         }
     }
-
+    std::cout << typeid(*this).name() << std::endl;
     // allocate memory on GPU
     double* d_Par = NULL;
     double* d_cost = NULL;
     Flow* d_data = NULL;
+    CostConfig* d_config;
+
     cudaMalloc((void**)&d_cost, N_PAR * sizeof(double));
     cudaMalloc((void**)&d_data, dataConfig->flowNum * sizeof(Flow));
-    // FIXME: this malloc turns d_Par to NULL
     cudaMalloc((void**)&d_Par, N_PAR * dim * sizeof(double));
-    if (d_Par == NULL) {
-        throw std::runtime_error("Failed to allocate memory on GPU");
-    }
+    cudaMalloc((void**)&d_config, sizeof(CostConfig));
 
-    Cost* d_costFunc = prepareForDevice();
     // copy data from CPU to GPU
     cudaMemcpy(d_data, data, dataConfig->flowNum * sizeof(Flow), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Par, LPar, N_PAR * dim * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_config, &config, sizeof(CostConfig), cudaMemcpyHostToDevice);
 
     kernelWrapper<<<(N_PAR + (THREADS_PER_BLOCK + 1)) / THREADS_PER_BLOCK, THREADS_PER_BLOCK>>>
-    (d_costFunc, d_Par, d_cost, d_data);
+    (d_config, d_Par, d_cost, d_data);
     cudaDeviceSynchronize();
     cudaMemcpy(cost, d_cost, N_PAR * sizeof(double), cudaMemcpyDeviceToHost);
 
@@ -68,9 +71,8 @@ void Cost::calculate(double** pars, int parNum, Flow* data, double* cost) {
     cudaFree(d_Par);
     cudaFree(d_cost);
     cudaFree(d_data);
+    cudaFree(d_config);
 
-    d_costFunc->leaveDevice();
-    cudaFree(d_costFunc);
 
     delete[] LPar;
 
@@ -128,14 +130,15 @@ __device__ void RegularCost::execute(double* pars, double *cost, Flow* data) {
     cudaFree(pred);
 }
 
-Cost* Cost::create(CostTypeEnum costType, int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType) {
+__device__ __host__ Cost* Cost::create(CostTypeEnum costType, int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType) {
     switch (costType) {
     case CostTypeEnum::Regular:
         return new RegularCost(nodeNum, dim, model, metricsType);
     case CostTypeEnum::P:
         return new PCost(nodeNum, dim, model, metricsType);
     default:
-        throw std::runtime_error("Unknown cost type");
+        printf("Error: Cost Type Error, return null by default\n");
+        return nullptr;
     }
 }
 

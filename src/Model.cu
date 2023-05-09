@@ -5,14 +5,15 @@
 
 #include <sstream>
 
-Model* Model::create(ModelTypeEnum type, int nodeNum, int dim) {
+__device__ __host__ Model* Model::create(ModelTypeEnum type, int nodeNum, int dim) {
     switch (type) {
     case ModelTypeEnum::Reversed_Gravity:
         return new RGM(nodeNum, dim);
     case ModelTypeEnum::Reversed_Gravity_Exp:
         return new RGM_EXP(nodeNum, dim);
     default:
-        throw std::runtime_error("Unknown model type");
+        printf("Unknown model type\n");
+        return nullptr;
     }
 }
 
@@ -25,10 +26,18 @@ RGM::RGM(int nodeNum, int dim) {
     this->nodeNum = nodeNum;
     this->dim = dim;
     flowNum = (nodeNum - 1) * nodeNum / 2;
-    cudaMallocManaged(&Push, sizeof(double) * nodeNum);
-    cudaMallocManaged(&Attr, sizeof(double) * nodeNum);
-    cudaMallocManaged(&beta, sizeof(double));
+    #if defined(__CUDA_ARCH__) 
+        cudaMalloc(&Push, sizeof(double) * nodeNum);
+        cudaMalloc(&Attr, sizeof(double) * nodeNum);
+        cudaMalloc(&beta, sizeof(double));
+    #else
+        cudaMallocManaged(&Push, sizeof(double) * nodeNum);
+        cudaMallocManaged(&Attr, sizeof(double) * nodeNum);
+        cudaMallocManaged(&beta, sizeof(double));
+    #endif // 
+    
 }
+
 
 RGM::~RGM() {
     cudaFree(Push);

@@ -2,14 +2,15 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
-Metrics* Metrics::create(MetricsTypeEnum type) {
+__device__ __host__ Metrics* Metrics::create(MetricsTypeEnum type) {
     switch (type) {
     case MetricsTypeEnum::RMSE:
         return new RMSEMetric();
     case MetricsTypeEnum::R2:
         return new RsquaredMetric();
     default:
-        throw std::runtime_error("Unknown metrics type");
+        printf("Error: unknown metrics type\n");
+        return nullptr;
     }
 }
 
