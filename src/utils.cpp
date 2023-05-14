@@ -21,7 +21,7 @@ double BoxMullerRandom() {
 }
 
 double random01() {
-    return rand() / RAND_MAX;
+    return (double)rand() / RAND_MAX;
 }
 
 void parseArgs(int argc, char *argv[])

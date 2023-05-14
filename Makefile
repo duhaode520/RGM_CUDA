@@ -1,8 +1,10 @@
 # 定义编译器和编译选项
 CXX = nvcc
 NVCC = nvcc
-CXXFLAGS = -g -std=c++11 -rdc=true -G
-NVCCFLAGS = -g -std=c++11 -rdc=true -G
+GPU_DEBUG = -G -rdc=true
+# GPU_DEBUG = 
+CXXFLAGS = -g -std=c++11 $(GPU_DEBUG)
+NVCCFLAGS = -g -std=c++11 $(GPU_DEBUG)
 
 # 源文件目录和目标文件目录
 SRCDIR = src
@@ -40,4 +42,5 @@ test: test/main.cpp $(OBJS)
 
 # 清除中间文件和可执行文件
 clean:
-	rm -rf $(OBJDIR)/*.o $(OBJDIR)/*.d $(EXEC) $(TEST_EXEC)
+	rm -rf $(OBJDIR)/*.o $(OBJDIR)/*.d $(EXEC) $(TEST_EXEC) 
+	rm -rf *.cudafe1.* *.ii *.fatbin* *.c *.ptx *.module_id *.o *.cubin

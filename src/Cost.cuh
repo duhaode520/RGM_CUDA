@@ -5,16 +5,9 @@
 #include "PSOConfig.h"
 #include "Model.cuh"
 #include "consts.h"
-#include "cuda_runtime.h"
+#include <cuda_runtime.h>
 
 
-struct CostConfig {
-    int nodeNum;
-    int dim;
-    CostTypeEnum costType;
-    ModelTypeEnum modelType;
-    MetricsTypeEnum metricsType;
-};
 
 /**
  * @brief parent class for all cost functions
@@ -22,15 +15,16 @@ struct CostConfig {
 class Cost {
 protected:
     /* data */
-    Metrics* metrics;
-    Model* model;
-    int nodeNum;
-    int dim;
+    Metrics* _metrics;
+    Model* _model;
+    int _nodeNum;
+    int _dim;
+    int _flowNum;
 
-    __device__ virtual void execute(double* pars, double* cost, Flow* data) = 0;
+    __device__ virtual void _execute(double* pars, double* cost, FlowData* data) = 0;
 
 
-    static const int THREADS_PER_BLOCK = 64; // thread number per block used in kernel function
+    static const int _THREADS_PER_BLOCK = 64; // thread number per block used in kernel function
 
 public:
     __device__ __host__ Cost() {}
@@ -41,7 +35,7 @@ public:
 
     void leaveDevice();
     
-    void calculate(CostConfig cfg, double** pars, int parNum, Flow* data, double* cost);
+    void calculate(GlobalConfig cfg, double** pars, int parNum, FlowData* data, double* cost);
     
     /**
      * @brief predict the cost of a particle
@@ -52,19 +46,19 @@ public:
      * @param metricsTypes the types of metrics
      * @param cost the costs of different metrics of the particle
      */
-    void predict(double* pars, Flow* data, int metricsSize, MetricsTypeEnum metricsTypes[], double* cost);
+    void predict(double* pars, FlowData* data, int metricsSize, MetricsTypeEnum metricsTypes[], double* cost);
 
     static __device__ __host__ Cost* create(CostTypeEnum costType, int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType);
-
+    // static __device__ __host__ Cost* create(CostConfig* config, Model* model);
     // static void destroy(Cost* cost);
     
-    friend __global__ void kernelWrapper(CostConfig* config, double* pars, double* cost, Flow* data);
+    friend __global__ void kernelWrapper(GlobalConfig* config, double* pars, double* cost, FlowData* data);
 };
-__global__ void kernelWrapper(CostConfig* config, double* pars, double* cost, Flow* data);
+__global__ void kernelWrapper(GlobalConfig* config, double* pars, double* cost, FlowData* data);
 
 class RegularCost : public Cost {
 protected:
-    __device__ void execute(double* par, double* cost, Flow* data) override;
+    __device__ void _execute(double* par, double* cost, FlowData* data) override;
 
 public:
     __device__ __host__ RegularCost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType) 
@@ -76,7 +70,7 @@ public:
 
 class PCost : public Cost {
 protected:
-    __device__ void execute(double* par, double* cost, Flow* data) override;
+    __device__ void _execute(double* par, double* cost, FlowData* data) override;
 
 public:
     __device__ __host__ PCost(int nodeNum, int dim, Model* model, MetricsTypeEnum metricsType) 

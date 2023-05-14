@@ -35,44 +35,76 @@ int main(int argc, char* argv[]) {
 
     srand(time(NULL));
 
-    cudaSetDevice(1);
-    Flow* datacache = new Flow[dataConfig->flowNum];
+    // cudaSetDevice(1);
+    FlowData* data = new FlowData[dataConfig->flowNum];
     Flow::tflow = new int[dataConfig->dim];
-    Flow::loadData(datacache, dataConfig->dataFile);   
+    Flow::loadData(data, dataConfig->dataFile);   
+    
     logger.printSessionTime("Data Loading");
 
-    Particle Ppar[dataConfig->PSwarmNum];
+    PParticle Ppar[dataConfig->PSwarmNum];
     Particle Qpar;
+    PParticle::PGbest = new double[dataConfig->dim];
+
+    GlobalConfig pConfig = {
+        dataConfig->nodeNum,
+        dataConfig->dim,
+        CostTypeEnum::Regular,
+        MODEL_TYPE,
+        MetricsTypeEnum::RMSE,
+        0,
+        0
+    };
 
     for (int i = 0; i < dataConfig->PSwarmNum; i++) {
+        pConfig.start_dim = dataConfig->cDim * i;
         if (i == dataConfig->PSwarmNum - 1) {
             // 最后一个粒子的维度可能不是cDim
             int lastDim = dataConfig->dim - i * dataConfig->cDim;
-            Ppar[i].initialize(lastDim);
+            pConfig.cDim = lastDim;
+            Ppar[i].initialize(pConfig);
         } else {
-            Ppar[i].initialize(dataConfig->cDim);
+            pConfig.cDim = dataConfig->cDim;
+            Ppar[i].initialize(pConfig);
         }
-        Ppar[i].setModel(MODEL_TYPE);
-        Ppar[i].setCost(CostTypeEnum::P, MetricsTypeEnum::RMSE);
     }
-    Qpar.initialize(dataConfig->dim);
-    Qpar.setModel(MODEL_TYPE);
-    Qpar.setCost(CostTypeEnum::Regular, MetricsTypeEnum::RMSE);
+
+    GlobalConfig qConfig = {
+        dataConfig->nodeNum,
+        dataConfig->dim,
+        CostTypeEnum::Regular,
+        MODEL_TYPE,
+        MetricsTypeEnum::RMSE,
+        0,
+        0
+    };
+
+    Qpar.initialize(qConfig);
 
     logger.printSessionTime("Initialization");
+
+    // cout << "PGbest:(Test) ";
+    // for (int i = 0; i < dataConfig->dim; i++) {
+    //     cout << PParticle::PGbest[i] << " ";
+    // }
+    // cout << endl;
 
     int Crossid;
     int iter = 0;
     for (int iter = 0; iter < MAX_ITER; iter++) {
-        // for (int s = 0; s < dataConfig->PSwarmNum; s++) {
-        //     Ppar[s].train(datacache);
-        //     logger.log("Iter:", iter, "PSwarm:", s, "P GbestCost:", Ppar[s].getGbestCost());
-        // }
-        // exchange();
-        Qpar.train(datacache);
+        for (int s = 0; s < dataConfig->PSwarmNum; s++) {
+            Ppar[s].train(data);
+            logger.log("Iter:", iter, "PSwarm:", s, "P GbestCost:", Ppar[s].getGbestCost());
+            Qpar.cooperate(&Ppar[s]);
+        }
+        
+        Qpar.train(data);
         logger.log("Iter:", iter, "Q GbestCost:", Qpar.getGbestCost(), 
             "Gbest Beta:", Qpar.getGbestBeta()); 
-        // exchange();
+        for (int s = 0; s < dataConfig->PSwarmNum; s++) {
+            Ppar[s].cooperate(&Qpar);
+        }
+
     }
     logger.printSessionTime("Training");
 
@@ -80,7 +112,7 @@ int main(int argc, char* argv[]) {
     logger.log(Qpar.getResult());
 
     double cost[Qpar.MetricsNum];
-    Qpar.predictCost(datacache, cost);
+    Qpar.predictCost(data, cost);
     logger.log("Predict RMSE:", cost[0], "Predict R2:", cost[1]);
 
     #pragma endregion
@@ -88,9 +120,11 @@ int main(int argc, char* argv[]) {
 
     #pragma region release
 
-    delete[] datacache;
+    delete[] data;
     delete[] Flow::tflow;
+    delete[] PParticle::PGbest;
     delete dataConfig;
+
     #pragma endregion
     return 0;
 }

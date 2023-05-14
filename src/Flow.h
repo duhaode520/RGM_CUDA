@@ -3,19 +3,17 @@
 #include <string>
 #include "DataConfig.h"
 
-class Flow {
-public:
-	int src;
-	int dest;
+struct FlowData {
+	unsigned int src;
+	unsigned int dest;
 	double flow;
 	double dist;
+};
 
-	Flow() {};
-	~Flow() ;
+namespace Flow {
+	extern int* tflow ;  
 
-	static int* tflow ;  
-
-	static void loadData(Flow* data, std::string filename);
+	void loadData(FlowData* data, std::string filename);
 };
 
 

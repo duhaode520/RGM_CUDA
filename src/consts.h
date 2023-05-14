@@ -16,5 +16,17 @@ enum CostTypeEnum {
     P
 };
 
+struct GlobalConfig {
+    int nodeNum;
+    int dim;
+    CostTypeEnum costType;
+    ModelTypeEnum modelType;
+    MetricsTypeEnum metricsType;
+
+    // for PCost
+    int start_dim;
+    int cDim;
+};
+
 const ModelTypeEnum MODEL_TYPE = ModelTypeEnum::Reversed_Gravity;
 #endif

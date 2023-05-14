@@ -4,11 +4,8 @@
 #include <cstring>
 int* Flow::tflow = nullptr; // static member must be initialized outside the class
 
-Flow::~Flow() {
 
-}
-
-void Flow::loadData(Flow* data, std::string filename) {
+void Flow::loadData(FlowData* data, std::string filename) {
     std::cout << "Loading data from " << filename << std::endl;
     memset(tflow, 0, dataConfig->dim * sizeof(int));
     std::ifstream fdata(filename);

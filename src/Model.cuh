@@ -8,13 +8,13 @@
 class Model {
 protected:
     // parse the particle parameters
-    virtual __device__ __host__ void parse(int index, double* par) = 0;
+    virtual __device__ __host__ void _parse(int index, double* par) = 0;
 
 public:
     __device__ __host__ Model(){}
     __device__ __host__ virtual ~Model(){}
 
-    virtual __device__ __host__ void pred(int index, double* par, double* pred, Flow* data) = 0;
+    virtual __device__ void pred(int index, double* par, double* pred, FlowData* data) = 0;
 
     virtual std::string getResult(double* pars) = 0;
 
@@ -31,15 +31,15 @@ public:
 class RGM : public Model {
 protected:
 
-    int nodeNum;
-    int dim;
-    int flowNum;
+    int _nodeNum;
+    int _dim;
+    int _flowNum;
     
-    double* Push;
-    double* Attr;
-    double* beta; // beta value for RGM, not an array
+    double* _Push;
+    double* _Attr;
+    double* _beta; // beta value for RGM, not an array
 
-    static constexpr int FLOW_SCALE = 1;
+    static constexpr int _FLOW_SCALE = 1;
     /**
      * @brief parse the particle parameters for RGM
      * the first 
@@ -47,13 +47,13 @@ protected:
      * @param par 
      * @return __device__ 
      */
-    __device__ __host__ void parse(int index, double* pars) override;
+    __device__ __host__ void _parse(int index, double* pars) override;
 
 public:
     __device__ __host__ RGM(int nodeNum, int dim);
     __device__ __host__ virtual ~RGM();
 
-    __device__  __host__ void pred(int index, double* pars, double* pred, Flow* data) override;
+    __device__  void pred(int index, double* pars, double* pred, FlowData* data) override;
 
     std::string getResult(double* pars);
 
@@ -64,12 +64,11 @@ public:
 
 class RGM_EXP : public RGM {
 protected:
-    static constexpr int BETA_SCALE = 10;
-    static constexpr int FLOW_SCALE = 1;
+    static constexpr int _FLOW_SCALE = 1;
 public:
     __device__ __host__ RGM_EXP(int nodeNum, int dim);
 
-    __device__ __host__ void pred(int index, double* pars, double* pred, Flow* data) override;
+    __device__  void pred(int index, double* pars, double* pred, FlowData* data) override;
 };
 
 
