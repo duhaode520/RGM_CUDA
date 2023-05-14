@@ -73,8 +73,9 @@ void Cost::calculate(GlobalConfig config, double** pars, int parNum, FlowData* d
     cudaMemcpy(d_data, data, _flowNum * sizeof(FlowData), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Par, LPar, N_PAR * _dim * sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(d_config, &config, sizeof(GlobalConfig), cudaMemcpyHostToDevice);
+    int blockNum = (N_PAR + (_THREADS_PER_BLOCK - 1)) / _THREADS_PER_BLOCK;
 
-    kernelWrapper<<<(N_PAR + (_THREADS_PER_BLOCK + 1)) / _THREADS_PER_BLOCK, _THREADS_PER_BLOCK>>>
+    kernelWrapper<<<blockNum, _THREADS_PER_BLOCK>>>
     (d_config, d_Par, d_cost, d_data);
     cudaDeviceSynchronize();
 
