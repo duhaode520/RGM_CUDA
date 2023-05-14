@@ -124,11 +124,11 @@ void Cost::leaveDevice() {
 
 void Cost::predict(double* pars, FlowData* data, int metricsSize, MetricsTypeEnum metricsTypes[], double* cost) {
     double* pred = new double[dataConfig->flowNum];
-    // _model->pred(0, pars, pred, data);
+    _model->pred(0, pars, pred, data);
     Metrics* m;
     for (int i = 0; i < metricsSize; i++) {
         m = Metrics::create(metricsTypes[i]);
-        // cost[i] = m->calc(data, pred, dataConfig->flowNum);
+        cost[i] = m->calc(data, pred, dataConfig->flowNum);
         delete m;
     }
     delete pred;

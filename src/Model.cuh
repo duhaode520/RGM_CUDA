@@ -14,7 +14,7 @@ public:
     __device__ __host__ Model(){}
     __device__ __host__ virtual ~Model(){}
 
-    virtual __device__ void pred(int index, double* par, double* pred, FlowData* data) = 0;
+    virtual __device__ __host__ void pred(int index, double* par, double* pred, FlowData* data) = 0;
 
     virtual std::string getResult(double* pars) = 0;
 
@@ -53,7 +53,7 @@ public:
     __device__ __host__ RGM(int nodeNum, int dim);
     __device__ __host__ virtual ~RGM();
 
-    __device__  void pred(int index, double* pars, double* pred, FlowData* data) override;
+    __device__  __host__ void pred(int index, double* pars, double* pred, FlowData* data) override;
 
     std::string getResult(double* pars);
 
@@ -68,7 +68,7 @@ protected:
 public:
     __device__ __host__ RGM_EXP(int nodeNum, int dim);
 
-    __device__  void pred(int index, double* pars, double* pred, FlowData* data) override;
+    __device__ __host__  void pred(int index, double* pars, double* pred, FlowData* data) override;
 };
 
 

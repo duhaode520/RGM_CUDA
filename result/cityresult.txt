@@ -1,0 +1,8 @@
+Time: Sun May 14 11:31:11 2023
+
+Nodes: 13 Flows: 156 Npar: 4096 MaxIter: 500
+Xmin: 0.001 Xmax: 1e+08 Xrandmin: 5 Xrandmax:70
+alpha: 0.75 pjump: 0.001 Number of P-Swarm groups: 3 CDIMS: 9
+flowscale: 1000 distscale: 100
+Data Loading finished in time: 0.000785s
+Initialization finished in time: 0.346615s

@@ -55,8 +55,8 @@ Particle::~Particle() {
 void Particle::initialize(GlobalConfig config) {
     this->_config = config;
     _particle_init(config.dim);
-    _setCost(config.costType, config.metricsType);
     _setModel(config.modelType);
+    _setCost(config.costType, config.metricsType);
 }
 
 void Particle::train(FlowData *data)
@@ -205,8 +205,8 @@ void PParticle::initialize(GlobalConfig config)
 {
     this->_config = config;
     _particle_init(config.cDim);
-    _setCost(config.costType, config.metricsType);
     _setModel(config.modelType);
+    _setCost(config.costType, config.metricsType);
     
     // Set PGbest
     __copyToPGbest();

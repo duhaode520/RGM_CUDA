@@ -1,0 +1,73 @@
+Time: Sun May 14 11:27:09 2023
+
+Nodes: 199 Flows: 39402 Npar: 2048 MaxIter: 500
+Xmin: 0.001 Xmax: 1e+08 Xrandmin: 5 Xrandmax:70
+alpha: 0.75 pjump: 0.001 Number of P-Swarm groups: 10 CDIMS: 40
+flowscale: 100 distscale: 100
+Data Loading finished in time: 0.194721s
+Initialization finished in time: 0.068056s
+Iter: 0 PSwarm: 0 P GbestCost: 4.94066e-324 
+Iter: 0 PSwarm: 1 P GbestCost: 4.94066e-324 
+Iter: 0 PSwarm: 2 P GbestCost: 4.94066e-324 
+Iter: 0 PSwarm: 3 P GbestCost: 4.94066e-324 
+Iter: 0 PSwarm: 4 P GbestCost: 4.94066e-324 
+Iter: 0 PSwarm: 5 P GbestCost: 4.94066e-324 
+Iter: 0 PSwarm: 6 P GbestCost: 4.94066e-324 
+Iter: 0 PSwarm: 7 P GbestCost: 4.94066e-324 
+Iter: 0 PSwarm: 8 P GbestCost: -3.60489e-95 
+Iter: 0 PSwarm: 9 P GbestCost: -2.86389e+251 
+Iter: 0 Q GbestCost: -1.17588e-321 Gbest Beta: 6.99441 
+Iter: 1 PSwarm: 0 P GbestCost: 4.94066e-324 
+Iter: 1 PSwarm: 1 P GbestCost: 4.94066e-324 
+Iter: 1 PSwarm: 2 P GbestCost: 4.94066e-324 
+Iter: 1 PSwarm: 3 P GbestCost: 4.94066e-324 
+Iter: 1 PSwarm: 4 P GbestCost: 4.94066e-324 
+Iter: 1 PSwarm: 5 P GbestCost: 4.94066e-324 
+Iter: 1 PSwarm: 6 P GbestCost: 4.94066e-324 
+Iter: 1 PSwarm: 7 P GbestCost: 4.94066e-324 
+Iter: 1 PSwarm: 8 P GbestCost: -3.60489e-95 
+Iter: 1 PSwarm: 9 P GbestCost: -2.86389e+251 
+Iter: 1 Q GbestCost: -1.17588e-321 Gbest Beta: 6.99441 
+Iter: 2 PSwarm: 0 P GbestCost: 4.94066e-324 
+Iter: 2 PSwarm: 1 P GbestCost: 4.94066e-324 
+Iter: 2 PSwarm: 2 P GbestCost: 4.94066e-324 
+Iter: 2 PSwarm: 3 P GbestCost: 4.94066e-324 
+Iter: 2 PSwarm: 4 P GbestCost: 4.94066e-324 
+Iter: 2 PSwarm: 5 P GbestCost: 4.94066e-324 
+Iter: 2 PSwarm: 6 P GbestCost: 4.94066e-324 
+Iter: 2 PSwarm: 7 P GbestCost: 4.94066e-324 
+Iter: 2 PSwarm: 8 P GbestCost: -3.60489e-95 
+Iter: 2 PSwarm: 9 P GbestCost: -2.86389e+251 
+Iter: 2 Q GbestCost: -1.17588e-321 Gbest Beta: 6.99441 
+Iter: 3 PSwarm: 0 P GbestCost: 4.94066e-324 
+Iter: 3 PSwarm: 1 P GbestCost: 4.94066e-324 
+Iter: 3 PSwarm: 2 P GbestCost: 4.94066e-324 
+Iter: 3 PSwarm: 3 P GbestCost: 4.94066e-324 
+Iter: 3 PSwarm: 4 P GbestCost: 4.94066e-324 
+Iter: 3 PSwarm: 5 P GbestCost: 4.94066e-324 
+Iter: 3 PSwarm: 6 P GbestCost: 4.94066e-324 
+Iter: 3 PSwarm: 7 P GbestCost: 4.94066e-324 
+Iter: 3 PSwarm: 8 P GbestCost: -3.60489e-95 
+Iter: 3 PSwarm: 9 P GbestCost: -2.86389e+251 
+Iter: 3 Q GbestCost: -1.17588e-321 Gbest Beta: 6.99441 
+Iter: 4 PSwarm: 0 P GbestCost: 4.94066e-324 
+Iter: 4 PSwarm: 1 P GbestCost: 4.94066e-324 
+Iter: 4 PSwarm: 2 P GbestCost: 4.94066e-324 
+Iter: 4 PSwarm: 3 P GbestCost: 4.94066e-324 
+Iter: 4 PSwarm: 4 P GbestCost: 4.94066e-324 
+Iter: 4 PSwarm: 5 P GbestCost: 4.94066e-324 
+Iter: 4 PSwarm: 6 P GbestCost: 4.94066e-324 
+Iter: 4 PSwarm: 7 P GbestCost: 4.94066e-324 
+Iter: 4 PSwarm: 8 P GbestCost: -3.60489e-95 
+Iter: 4 PSwarm: 9 P GbestCost: -2.86389e+251 
+Iter: 4 Q GbestCost: -1.17588e-321 Gbest Beta: 6.99441 
+Iter: 5 PSwarm: 0 P GbestCost: 4.94066e-324 
+Iter: 5 PSwarm: 1 P GbestCost: 4.94066e-324 
+Iter: 5 PSwarm: 2 P GbestCost: 4.94066e-324 
+Iter: 5 PSwarm: 3 P GbestCost: 4.94066e-324 
+Iter: 5 PSwarm: 4 P GbestCost: 4.94066e-324 
+Iter: 5 PSwarm: 5 P GbestCost: 4.94066e-324 
+Iter: 5 PSwarm: 6 P GbestCost: 4.94066e-324 
+Iter: 5 PSwarm: 7 P GbestCost: 4.94066e-324 
+Iter: 5 PSwarm: 8 P GbestCost: -3.60489e-95 
+Iter: 5 PSwarm: 9 P GbestCost: -2.86389e+251 

@@ -15,7 +15,7 @@ public:
     __device__ __host__ Metrics(/* args */) {}
     __device__ __host__ virtual ~Metrics() {}
 
-    virtual __device__  double calc(FlowData* data, double* pred, int size) = 0;
+    virtual __device__ __host__  double calc(FlowData* data, double* pred, int size) = 0;
 
     static __device__ __host__ Metrics* create(MetricsTypeEnum type);
 
@@ -29,12 +29,12 @@ class RMSEMetric : public Metrics {
 private:
     /* data */
 public:
-    __device__  double calc(FlowData* data, double* pred, int size) override;
+    __device__ __host__  double calc(FlowData* data, double* pred, int size) override;
 };
 
 class RsquaredMetric : public Metrics {
 public:
-    __device__  double calc(FlowData* data, double* pred, int size) override;
+    __device__ __host__  double calc(FlowData* data, double* pred, int size) override;
 };
 
 #endif

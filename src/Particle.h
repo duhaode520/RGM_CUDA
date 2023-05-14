@@ -83,15 +83,6 @@ public:
      */
     void cooperate(Particle* other);
     
-    // static constexpr double Xmin = 0.001;
-    // static constexpr double Xmax = 100000000;
-    // static constexpr double Xrandmin = 5;
-    // static constexpr double Xrandmax = 70;
-    // static constexpr int Npar = 4096;// Number of particles each swarm
-    // static constexpr double alpha = 0.75;
-    // static constexpr double pjump = 0.001;
-    // static constexpr double SCALE = 1;
-    // static constexpr int Maxiter = 3000;
     static constexpr int MetricsNum = 2;
 
     friend class Cost;

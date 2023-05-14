@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     logger.logStartInfo(dataConfig);
 
     srand(time(NULL));
-
+    cudaDeviceSetLimit(cudaLimitStackSize, 256 * 1024 * 1024);
     // cudaSetDevice(1);
     FlowData* data = new FlowData[dataConfig->flowNum];
     Flow::tflow = new int[dataConfig->dim];
@@ -109,6 +109,7 @@ int main(int argc, char* argv[]) {
     logger.printSessionTime("Training");
 
     #pragma region output
+    logger.log("------------FINAL RESULT------------");
     logger.log(Qpar.getResult());
 
     double cost[Qpar.MetricsNum];
