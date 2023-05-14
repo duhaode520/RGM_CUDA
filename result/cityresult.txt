@@ -1,8 +1,236 @@
-Time: Sun May 14 11:31:11 2023
+Time: Sun May 14 12:55:15 2023
 
-Nodes: 13 Flows: 156 Npar: 4096 MaxIter: 500
+Nodes: 13 Flows: 156 Npar: 512 MaxIter: 50
 Xmin: 0.001 Xmax: 1e+08 Xrandmin: 5 Xrandmax:70
 alpha: 0.75 pjump: 0.001 Number of P-Swarm groups: 3 CDIMS: 9
 flowscale: 1000 distscale: 100
-Data Loading finished in time: 0.000785s
-Initialization finished in time: 0.346615s
+Device count:  3 
+Device name:  TITAN RTX 
+Compute capability:  7 . 5 
+MultiProcessor count:  72 
+Max threads per multiprocessor:  1024 
+Max threads per block:  1024 
+Warp size:  32 
+cudaLimitStackSize:  65536 
+cudaLimitDevRuntimeSyncDepth:  2 
+cudaLimitMallocHeapSize:  33554432 
+Data Loading finished in time: 0.191847s
+Initialization finished in time: 0.001283s
+Iter: 0 PSwarm: 0 P GbestCost: 115.757 
+Iter: 0 PSwarm: 1 P GbestCost: 115.757 
+Iter: 0 PSwarm: 2 P GbestCost: 115.757 
+Iter: 0 Q GbestCost: 329.364 Gbest Beta: 2.02766 
+Iter: 1 PSwarm: 0 P GbestCost: 115.757 
+Iter: 1 PSwarm: 1 P GbestCost: 115.757 
+Iter: 1 PSwarm: 2 P GbestCost: 115.757 
+Iter: 1 Q GbestCost: 218.294 Gbest Beta: 2.91657 
+Iter: 2 PSwarm: 0 P GbestCost: 115.757 
+Iter: 2 PSwarm: 1 P GbestCost: 115.757 
+Iter: 2 PSwarm: 2 P GbestCost: 115.757 
+Iter: 2 Q GbestCost: 143.03 Gbest Beta: 2.96563 
+Iter: 3 PSwarm: 0 P GbestCost: 115.757 
+Iter: 3 PSwarm: 1 P GbestCost: 115.757 
+Iter: 3 PSwarm: 2 P GbestCost: 115.757 
+Iter: 3 Q GbestCost: 104.474 Gbest Beta: 3.58577 
+Iter: 4 PSwarm: 0 P GbestCost: 115.757 
+Iter: 4 PSwarm: 1 P GbestCost: 115.757 
+Iter: 4 PSwarm: 2 P GbestCost: 115.757 
+Iter: 4 Q GbestCost: 83.0239 Gbest Beta: 4.58038 
+Iter: 5 PSwarm: 0 P GbestCost: 115.757 
+Iter: 5 PSwarm: 1 P GbestCost: 115.757 
+Iter: 5 PSwarm: 2 P GbestCost: 115.757 
+Iter: 5 Q GbestCost: 70.8652 Gbest Beta: 5.60179 
+Iter: 6 PSwarm: 0 P GbestCost: 115.757 
+Iter: 6 PSwarm: 1 P GbestCost: 115.757 
+Iter: 6 PSwarm: 2 P GbestCost: 115.757 
+Iter: 6 Q GbestCost: 62.0904 Gbest Beta: 5.39723 
+Iter: 7 PSwarm: 0 P GbestCost: 115.757 
+Iter: 7 PSwarm: 1 P GbestCost: 115.757 
+Iter: 7 PSwarm: 2 P GbestCost: 115.757 
+Iter: 7 Q GbestCost: 59.2092 Gbest Beta: 5.60292 
+Iter: 8 PSwarm: 0 P GbestCost: 115.757 
+Iter: 8 PSwarm: 1 P GbestCost: 115.757 
+Iter: 8 PSwarm: 2 P GbestCost: 115.757 
+Iter: 8 Q GbestCost: 58.0243 Gbest Beta: 5.32643 
+Iter: 9 PSwarm: 0 P GbestCost: 115.757 
+Iter: 9 PSwarm: 1 P GbestCost: 115.757 
+Iter: 9 PSwarm: 2 P GbestCost: 115.757 
+Iter: 9 Q GbestCost: 56.7947 Gbest Beta: 5.3343 
+Iter: 10 PSwarm: 0 P GbestCost: 115.757 
+Iter: 10 PSwarm: 1 P GbestCost: 115.757 
+Iter: 10 PSwarm: 2 P GbestCost: 115.757 
+Iter: 10 Q GbestCost: 56.0074 Gbest Beta: 5.34463 
+Iter: 11 PSwarm: 0 P GbestCost: 115.757 
+Iter: 11 PSwarm: 1 P GbestCost: 115.757 
+Iter: 11 PSwarm: 2 P GbestCost: 115.757 
+Iter: 11 Q GbestCost: 54.3909 Gbest Beta: 5.36129 
+Iter: 12 PSwarm: 0 P GbestCost: 115.757 
+Iter: 12 PSwarm: 1 P GbestCost: 115.757 
+Iter: 12 PSwarm: 2 P GbestCost: 115.757 
+Iter: 12 Q GbestCost: 53.1792 Gbest Beta: 5.12366 
+Iter: 13 PSwarm: 0 P GbestCost: 115.757 
+Iter: 13 PSwarm: 1 P GbestCost: 115.757 
+Iter: 13 PSwarm: 2 P GbestCost: 115.757 
+Iter: 13 Q GbestCost: 52.299 Gbest Beta: 5.0036 
+Iter: 14 PSwarm: 0 P GbestCost: 115.757 
+Iter: 14 PSwarm: 1 P GbestCost: 115.757 
+Iter: 14 PSwarm: 2 P GbestCost: 115.757 
+Iter: 14 Q GbestCost: 50.7255 Gbest Beta: 4.7444 
+Iter: 15 PSwarm: 0 P GbestCost: 115.757 
+Iter: 15 PSwarm: 1 P GbestCost: 115.757 
+Iter: 15 PSwarm: 2 P GbestCost: 115.757 
+Iter: 15 Q GbestCost: 50.3329 Gbest Beta: 4.55228 
+Iter: 16 PSwarm: 0 P GbestCost: 115.757 
+Iter: 16 PSwarm: 1 P GbestCost: 115.757 
+Iter: 16 PSwarm: 2 P GbestCost: 115.757 
+Iter: 16 Q GbestCost: 49.8555 Gbest Beta: 4.46178 
+Iter: 17 PSwarm: 0 P GbestCost: 115.757 
+Iter: 17 PSwarm: 1 P GbestCost: 115.757 
+Iter: 17 PSwarm: 2 P GbestCost: 115.757 
+Iter: 17 Q GbestCost: 49.2046 Gbest Beta: 4.21458 
+Iter: 18 PSwarm: 0 P GbestCost: 115.757 
+Iter: 18 PSwarm: 1 P GbestCost: 115.757 
+Iter: 18 PSwarm: 2 P GbestCost: 115.757 
+Iter: 18 Q GbestCost: 48.176 Gbest Beta: 4.11546 
+Iter: 19 PSwarm: 0 P GbestCost: 115.757 
+Iter: 19 PSwarm: 1 P GbestCost: 115.757 
+Iter: 19 PSwarm: 2 P GbestCost: 115.757 
+Iter: 19 Q GbestCost: 47.7614 Gbest Beta: 3.96441 
+Iter: 20 PSwarm: 0 P GbestCost: 115.757 
+Iter: 20 PSwarm: 1 P GbestCost: 115.757 
+Iter: 20 PSwarm: 2 P GbestCost: 115.757 
+Iter: 20 Q GbestCost: 47.3865 Gbest Beta: 3.85528 
+Iter: 21 PSwarm: 0 P GbestCost: 115.757 
+Iter: 21 PSwarm: 1 P GbestCost: 115.757 
+Iter: 21 PSwarm: 2 P GbestCost: 115.757 
+Iter: 21 Q GbestCost: 46.8808 Gbest Beta: 3.6447 
+Iter: 22 PSwarm: 0 P GbestCost: 115.757 
+Iter: 22 PSwarm: 1 P GbestCost: 115.757 
+Iter: 22 PSwarm: 2 P GbestCost: 115.757 
+Iter: 22 Q GbestCost: 45.9352 Gbest Beta: 3.57973 
+Iter: 23 PSwarm: 0 P GbestCost: 115.757 
+Iter: 23 PSwarm: 1 P GbestCost: 115.757 
+Iter: 23 PSwarm: 2 P GbestCost: 115.757 
+Iter: 23 Q GbestCost: 45.5869 Gbest Beta: 3.51484 
+Iter: 24 PSwarm: 0 P GbestCost: 115.757 
+Iter: 24 PSwarm: 1 P GbestCost: 115.757 
+Iter: 24 PSwarm: 2 P GbestCost: 115.757 
+Iter: 24 Q GbestCost: 45.0749 Gbest Beta: 3.44426 
+Iter: 25 PSwarm: 0 P GbestCost: 115.757 
+Iter: 25 PSwarm: 1 P GbestCost: 115.757 
+Iter: 25 PSwarm: 2 P GbestCost: 115.757 
+Iter: 25 Q GbestCost: 44.7251 Gbest Beta: 3.50057 
+Iter: 26 PSwarm: 0 P GbestCost: 115.757 
+Iter: 26 PSwarm: 1 P GbestCost: 115.757 
+Iter: 26 PSwarm: 2 P GbestCost: 115.757 
+Iter: 26 Q GbestCost: 44.4301 Gbest Beta: 3.4971 
+Iter: 27 PSwarm: 0 P GbestCost: 115.757 
+Iter: 27 PSwarm: 1 P GbestCost: 115.757 
+Iter: 27 PSwarm: 2 P GbestCost: 115.757 
+Iter: 27 Q GbestCost: 43.8166 Gbest Beta: 3.497 
+Iter: 28 PSwarm: 0 P GbestCost: 115.757 
+Iter: 28 PSwarm: 1 P GbestCost: 115.757 
+Iter: 28 PSwarm: 2 P GbestCost: 115.757 
+Iter: 28 Q GbestCost: 43.3388 Gbest Beta: 3.49768 
+Iter: 29 PSwarm: 0 P GbestCost: 115.757 
+Iter: 29 PSwarm: 1 P GbestCost: 115.757 
+Iter: 29 PSwarm: 2 P GbestCost: 115.757 
+Iter: 29 Q GbestCost: 43.0099 Gbest Beta: 3.49725 
+Iter: 30 PSwarm: 0 P GbestCost: 115.757 
+Iter: 30 PSwarm: 1 P GbestCost: 115.757 
+Iter: 30 PSwarm: 2 P GbestCost: 115.757 
+Iter: 30 Q GbestCost: 42.6951 Gbest Beta: 3.49319 
+Iter: 31 PSwarm: 0 P GbestCost: 115.757 
+Iter: 31 PSwarm: 1 P GbestCost: 115.757 
+Iter: 31 PSwarm: 2 P GbestCost: 115.757 
+Iter: 31 Q GbestCost: 42.3226 Gbest Beta: 3.49243 
+Iter: 32 PSwarm: 0 P GbestCost: 115.757 
+Iter: 32 PSwarm: 1 P GbestCost: 115.757 
+Iter: 32 PSwarm: 2 P GbestCost: 115.757 
+Iter: 32 Q GbestCost: 41.7391 Gbest Beta: 3.4973 
+Iter: 33 PSwarm: 0 P GbestCost: 115.757 
+Iter: 33 PSwarm: 1 P GbestCost: 115.757 
+Iter: 33 PSwarm: 2 P GbestCost: 115.757 
+Iter: 33 Q GbestCost: 41.2151 Gbest Beta: 3.49801 
+Iter: 34 PSwarm: 0 P GbestCost: 115.757 
+Iter: 34 PSwarm: 1 P GbestCost: 115.757 
+Iter: 34 PSwarm: 2 P GbestCost: 115.757 
+Iter: 34 Q GbestCost: 40.6705 Gbest Beta: 3.49711 
+Iter: 35 PSwarm: 0 P GbestCost: 115.757 
+Iter: 35 PSwarm: 1 P GbestCost: 115.757 
+Iter: 35 PSwarm: 2 P GbestCost: 115.757 
+Iter: 35 Q GbestCost: 39.4664 Gbest Beta: 3.49703 
+Iter: 36 PSwarm: 0 P GbestCost: 115.757 
+Iter: 36 PSwarm: 1 P GbestCost: 115.757 
+Iter: 36 PSwarm: 2 P GbestCost: 115.757 
+Iter: 36 Q GbestCost: 39.1516 Gbest Beta: 3.497 
+Iter: 37 PSwarm: 0 P GbestCost: 115.757 
+Iter: 37 PSwarm: 1 P GbestCost: 115.757 
+Iter: 37 PSwarm: 2 P GbestCost: 115.757 
+Iter: 37 Q GbestCost: 37.8995 Gbest Beta: 3.6338 
+Iter: 38 PSwarm: 0 P GbestCost: 115.757 
+Iter: 38 PSwarm: 1 P GbestCost: 115.757 
+Iter: 38 PSwarm: 2 P GbestCost: 115.757 
+Iter: 38 Q GbestCost: 36.4062 Gbest Beta: 3.58457 
+Iter: 39 PSwarm: 0 P GbestCost: 115.757 
+Iter: 39 PSwarm: 1 P GbestCost: 115.757 
+Iter: 39 PSwarm: 2 P GbestCost: 115.757 
+Iter: 39 Q GbestCost: 35.9921 Gbest Beta: 3.64683 
+Iter: 40 PSwarm: 0 P GbestCost: 115.757 
+Iter: 40 PSwarm: 1 P GbestCost: 115.757 
+Iter: 40 PSwarm: 2 P GbestCost: 115.757 
+Iter: 40 Q GbestCost: 35.4727 Gbest Beta: 3.57132 
+Iter: 41 PSwarm: 0 P GbestCost: 115.757 
+Iter: 41 PSwarm: 1 P GbestCost: 115.757 
+Iter: 41 PSwarm: 2 P GbestCost: 115.757 
+Iter: 41 Q GbestCost: 35.1647 Gbest Beta: 3.47475 
+Iter: 42 PSwarm: 0 P GbestCost: 115.757 
+Iter: 42 PSwarm: 1 P GbestCost: 115.757 
+Iter: 42 PSwarm: 2 P GbestCost: 115.757 
+Iter: 42 Q GbestCost: 34.6824 Gbest Beta: 3.52653 
+Iter: 43 PSwarm: 0 P GbestCost: 115.757 
+Iter: 43 PSwarm: 1 P GbestCost: 115.757 
+Iter: 43 PSwarm: 2 P GbestCost: 115.757 
+Iter: 43 Q GbestCost: 34.2106 Gbest Beta: 3.51032 
+Iter: 44 PSwarm: 0 P GbestCost: 115.757 
+Iter: 44 PSwarm: 1 P GbestCost: 115.757 
+Iter: 44 PSwarm: 2 P GbestCost: 115.757 
+Iter: 44 Q GbestCost: 33.8937 Gbest Beta: 3.50257 
+Iter: 45 PSwarm: 0 P GbestCost: 115.757 
+Iter: 45 PSwarm: 1 P GbestCost: 115.757 
+Iter: 45 PSwarm: 2 P GbestCost: 115.757 
+Iter: 45 Q GbestCost: 33.1418 Gbest Beta: 3.50219 
+Iter: 46 PSwarm: 0 P GbestCost: 115.757 
+Iter: 46 PSwarm: 1 P GbestCost: 115.757 
+Iter: 46 PSwarm: 2 P GbestCost: 115.757 
+Iter: 46 Q GbestCost: 32.9415 Gbest Beta: 3.50875 
+Iter: 47 PSwarm: 0 P GbestCost: 115.757 
+Iter: 47 PSwarm: 1 P GbestCost: 115.757 
+Iter: 47 PSwarm: 2 P GbestCost: 115.757 
+Iter: 47 Q GbestCost: 32.8085 Gbest Beta: 3.5206 
+Iter: 48 PSwarm: 0 P GbestCost: 115.757 
+Iter: 48 PSwarm: 1 P GbestCost: 115.757 
+Iter: 48 PSwarm: 2 P GbestCost: 115.757 
+Iter: 48 Q GbestCost: 32.6811 Gbest Beta: 3.51601 
+Iter: 49 PSwarm: 0 P GbestCost: 115.757 
+Iter: 49 PSwarm: 1 P GbestCost: 115.757 
+Iter: 49 PSwarm: 2 P GbestCost: 115.757 
+Iter: 49 Q GbestCost: 32.5635 Gbest Beta: 3.5262 
+Training finished in time: 2.6914s
+------------FINAL RESULT------------ 
+保定,22.9858,22.3849
+北京,61.2937,68.8786
+沧州,15.0131,18.699
+承德,3.50522,0.001
+邯郸,16.9228,7.62097
+衡水,5.52314,7.68043
+廊坊,9.58806,8.75361
+秦皇岛,3.11696,32.4317
+石家庄,10.1357,9.99627
+唐山,1.19146,18.8468
+天津,12.3029,9.86787
+邢台,5.67579,2.91081
+张家口,8.27891,10.1916
+Beta:3.5262
+ 
+Predict RMSE: 32.5635 Predict R2: 0.901066 

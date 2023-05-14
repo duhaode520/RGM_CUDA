@@ -24,7 +24,7 @@ protected:
     __device__ virtual void _execute(double* pars, double* cost, FlowData* data) = 0;
 
 
-    static const int _THREADS_PER_BLOCK = 64; // thread number per block used in kernel function
+    static const int _THREADS_PER_BLOCK = 128; // thread number per block used in kernel function
 
 public:
     __device__ __host__ Cost() {}

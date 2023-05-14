@@ -35,8 +35,7 @@ __global__ void kernelWrapper(GlobalConfig* config, double* pars, double* cost, 
     Cost* costFunc = Cost::create(config->costType, config->nodeNum, config->dim, model, config->metricsType);
     int flowNum = config->nodeNum * (config->nodeNum - 1);
     for (int i = 0; i < flowNum; i++) {
-        int src = data[i].src;
-        assert(src < flowNum);
+        assert(data[i].src < flowNum);
     }
 
     // for (int i = 0; i < costFunc->_flowNum; i++) {
@@ -142,9 +141,8 @@ __device__ void RegularCost::_execute(double* pars, double *cost, FlowData* data
     cudaMalloc((void**)&pred, flowNum * sizeof(double));
 
     for (int i = 0; i < flowNum; i++) {
-        int src = data[i].src;
-        if (src > flowNum) {
-            printf("execute: flow %d is changed in kernel %d\n", i, index);
+        if (data[i].src > flowNum) {
+            printf("execute: flow %d is broken in kernel %d\n", i, index);
         }
     }
 

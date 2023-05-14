@@ -19,6 +19,7 @@ enum CostTypeEnum {
 struct GlobalConfig {
     int nodeNum;
     int dim;
+    int flowNum;
     CostTypeEnum costType;
     ModelTypeEnum modelType;
     MetricsTypeEnum metricsType;

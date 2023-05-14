@@ -60,13 +60,10 @@ __device__ __host__ void RGM::pred(int index, double* pars, double* pred, FlowDa
     _parse(index, pars);
     // TODO: 这一步其实是可以用 CUDA 2D 的一些手段搞成并行的，但是我懒得学
     for (int i = 0; i < _flowNum; i++) {
-        int src = data[i].src;
-        int dest = data[i].dest;
-        double dist = data[i].dist;
-        if (src > _flowNum) {
-            printf("flow %d is changed in kernel %d\n", i, index);
+        if (data[i].src > _flowNum) {
+            printf("RGM::pred: flow %d is changed in kernel %d\n", i, index);
         }
-        pred[i] = _FLOW_SCALE * _Push[src] * _Attr[dest] / pow(dist, *_beta);
+        pred[i] = _FLOW_SCALE * _Push[data[i].src] * _Attr[data[i].dest] / pow(data[i].dist, *_beta);
     }
 }
 
@@ -102,11 +99,7 @@ __device__ __host__ void RGM_EXP::pred(int index, double* pars, double* pred, Fl
     _parse(index, pars);
 
     for (int i = 0; i < _flowNum; i++) {
-        int src = data[i].src;
-        int dest = data[i].dest;
-        double dist = data[i].dist;
-
         // exp形式的距离衰减
-        pred[i] = _FLOW_SCALE * _Push[src] * _Attr[dest] / exp(*_beta * dist);
+        pred[i] = _FLOW_SCALE * _Push[data[i].src] * _Attr[data[i].dest] / exp(*_beta * data[i].dist);
     }
 }

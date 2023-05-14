@@ -7,9 +7,9 @@
 /** HINT: For now, the N_PAR is limited in 2048. 
  * Bigger N_PAR will cause CUDA_EXCEPTION 5 for unknown reason.
 */
-const int N_PAR = 2048;// Number of particles each swarm 
+const int N_PAR = 512;// Number of particles each swarm 
 
-const int MAX_ITER = 500;  //Maximum Iteration
+const int MAX_ITER = 50;  //Maximum Iteration
 const double X_MIN = 0.001; 
 const double X_MAX = 100000000; 
 const double X_RAND_MIN = 5;

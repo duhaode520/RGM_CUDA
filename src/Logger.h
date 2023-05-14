@@ -36,7 +36,10 @@ public:
     Logger(std::string outputfile);
     ~Logger();
     void logStartInfo(DataConfig* dataConfig);
+
     void printSessionTime(std::string sessionName);
+
+    void logCudaInfo();
 
     template <typename... Args>
     void log(Args... args) {

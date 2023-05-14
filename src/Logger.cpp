@@ -1,4 +1,5 @@
 #include "Logger.h"
+#include "cuda_runtime.h"
 
 void Logger::log_start(std::ostream &out, DataConfig *dataConfig) {
     time_t now = time(0);   // 当前系统时间
@@ -38,19 +39,26 @@ void Logger::printSessionTime(std::string sessionName) {
     tprev = tend;
 }
 
-// template <typename T, typename... Args>
-// void Logger::logItem(T arg, Args... args) {
-//     std::cout << arg << " ";
-//     ofstream << arg << " ";
-//     log(args...);
-// }
+void Logger::logCudaInfo() {
+    // Device info
+    int deviceCount;
+    cudaGetDeviceCount(&deviceCount);
+    log("Device count: ", deviceCount);
+    cudaDeviceProp deviceProp;
+    cudaGetDeviceProperties(&deviceProp, 0);
+    log("Device name: ", deviceProp.name);
+    log("Compute capability: ", deviceProp.major, ".", deviceProp.minor);
+    log("MultiProcessor count: ", deviceProp.multiProcessorCount);
+    log("Max threads per multiprocessor: ", deviceProp.maxThreadsPerMultiProcessor);
+    log("Max threads per block: ", deviceProp.maxThreadsPerBlock);
+    log("Warp size: ", deviceProp.warpSize);
 
-// void Logger::logItem() {
-//     std::cout << std::endl;
-//     ofstream << std::endl;
-// }
-
-// template <typename... Args>
-// void Logger::log(Args... args) {
-//     logItem(args...);
-// }
+    // Device limits
+    size_t limit;
+    cudaDeviceGetLimit(&limit, cudaLimitStackSize);
+    log("cudaLimitStackSize: ", limit);
+    cudaDeviceGetLimit(&limit, cudaLimitDevRuntimeSyncDepth);
+    log("cudaLimitDevRuntimeSyncDepth: ", limit);
+    cudaDeviceGetLimit(&limit, cudaLimitMallocHeapSize);
+    log("cudaLimitMallocHeapSize: ", limit);
+}

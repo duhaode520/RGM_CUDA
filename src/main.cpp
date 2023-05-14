@@ -33,8 +33,20 @@ int main(int argc, char* argv[]) {
     Logger logger(dataConfig->outputFile);
     logger.logStartInfo(dataConfig);
 
+
+    // 把CUDA的栈和堆开大，以应对大的粒子数
+    cudaError_t e = cudaDeviceSetLimit(cudaLimitStackSize, 64 * 1024);
+    if (e != cudaSuccess) {
+        logger.log("Set cudaLimitStackSize failed, error code:", e);
+    }
+    e = cudaDeviceSetLimit(cudaLimitMallocHeapSize, 16 * 1024 * 1024);
+    if (e != cudaSuccess) {
+        logger.log("Set cudaLimitMallocHeapSize failed, error code:", e);
+    }
+    // e = cudaDeviceSetLimit(cudaLimitDevRuntimeSyncDepth, 4);
+    logger.logCudaInfo();
+
     srand(time(NULL));
-    cudaDeviceSetLimit(cudaLimitStackSize, 256 * 1024 * 1024);
     // cudaSetDevice(1);
     FlowData* data = new FlowData[dataConfig->flowNum];
     Flow::tflow = new int[dataConfig->dim];
@@ -49,6 +61,7 @@ int main(int argc, char* argv[]) {
     GlobalConfig pConfig = {
         dataConfig->nodeNum,
         dataConfig->dim,
+        dataConfig->flowNum,
         CostTypeEnum::Regular,
         MODEL_TYPE,
         MetricsTypeEnum::RMSE,
@@ -72,6 +85,7 @@ int main(int argc, char* argv[]) {
     GlobalConfig qConfig = {
         dataConfig->nodeNum,
         dataConfig->dim,
+        dataConfig->flowNum,
         CostTypeEnum::Regular,
         MODEL_TYPE,
         MetricsTypeEnum::RMSE,
