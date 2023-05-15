@@ -5,11 +5,11 @@ void Particle::_particle_init(int dim) {
     this->_par_dim = dim;
 
     // 1. particles initialization
-    _Par = new double*[N_PAR];
-    _Pbest = new double*[N_PAR];
+    _Par = new float*[N_PAR];
+    _Pbest = new float*[N_PAR];
     for (int i = 0; i < N_PAR; i++) {
-        _Par[i] = new double[_par_dim];
-        _Pbest[i] = new double[_par_dim];
+        _Par[i] = new float[_par_dim];
+        _Pbest[i] = new float[_par_dim];
     }
 
     for (int i = 0; i < N_PAR; i++) {
@@ -24,7 +24,7 @@ void Particle::_particle_init(int dim) {
     }
 
     // global best should be complete, not just focus on partial dimensions
-    _Gbest = new double[_par_dim];
+    _Gbest = new float[_par_dim];
     for (int d = 0; d < _par_dim; d++) {
         _Gbest[d] = _Pbest[0][d];
     }
@@ -32,11 +32,11 @@ void Particle::_particle_init(int dim) {
 }
 
 void Particle::_setCost(CostTypeEnum costType, MetricsTypeEnum metricsType) {
-    _cost_func = Cost::create(costType, dataConfig->nodeNum, _config.dim, _model, metricsType);
+    _cost_func = Cost::create(costType, _config.nodeNum, _config.dim, _config.flowNum, _model, metricsType);
 }
 
 void Particle::_setModel(ModelTypeEnum modelType) {
-    this->_model = Model::create(modelType, dataConfig->nodeNum, _config.dim);
+    this->_model = Model::create(modelType, _config.nodeNum, _config.dim, _config.flowNum);
 }
 
 Particle::~Particle() {
@@ -70,7 +70,7 @@ void Particle::train(FlowData *data)
     _swarmUpdate();
 }
 
-void Particle::predictCost(FlowData *data, double *cost) {
+void Particle::predictCost(FlowData *data, float *cost) {
     MetricsTypeEnum metricsTypes[MetricsNum] 
         = {MetricsTypeEnum::RMSE, MetricsTypeEnum::R2};
     _cost_func->predict(_Gbest, data, MetricsNum, metricsTypes, cost);
@@ -80,7 +80,7 @@ void Particle::predictCost(FlowData *data, double *cost) {
 void Particle::_costInitialize(FlowData *data) {
     // cost initialization
     _costCalc(data);
-    memcpy(_Pbest_cost, _cost, sizeof(double) * N_PAR);
+    memcpy(_Pbest_cost, _cost, sizeof(float) * N_PAR);
     _Gbest_cost = _Pbest_cost[0];
     _Gbest_id = 0;
 }
@@ -92,7 +92,7 @@ void Particle::_costCalc(FlowData *data) {
 void Particle::_bestUpdate() {
     // std::cout << "Cost: ";
     for (int p = 0; p < N_PAR; p++) {
-        double cur_cost = _cost[p];
+        float cur_cost = _cost[p];
         // std::cout << cur_cost << " ";
         if (cur_cost < _Pbest_cost[p]) {
             for (int d = 0; d < _par_dim; d++) {
@@ -120,9 +120,9 @@ void Particle::_swarmUpdate() {
             if (Flow::tflow[d] == 0) {
                 continue;
             }
-            double sigma = fabs(_Gbest[d] - _Par[p][d]);
+            float sigma = fabs(_Gbest[d] - _Par[p][d]);
             _Par[p][d] = _Gbest[d] + ALPHA * sigma * BoxMullerRandom();
-            double rjump = 1.0 * random01();
+            float rjump = 1.0 * random01();
             if(rjump<P_JUMP) {
                 _Par[p][d]=1.0 * random01() *
                  (X_RAND_MAX - X_RAND_MIN) + X_RAND_MIN;
@@ -138,11 +138,11 @@ void Particle::_swarmUpdate() {
     }
 }
 
-double Particle::getGbestCost() {
+float Particle::getGbestCost() {
     return _Gbest_cost;
 }
 
-double Particle::getGbestBeta() {
+float Particle::getGbestBeta() {
     return _Gbest[_par_dim - 1] / BETA_SCALE;
 }
 
@@ -162,7 +162,7 @@ void Particle::cooperate(Particle *other) {
     }
 }
 
-double* PParticle::PGbest = nullptr;
+float* PParticle::PGbest = nullptr;
 
 void PParticle::__copyToPGbest() {
     for (int d = 0; d < _par_dim; d++) {
@@ -173,10 +173,10 @@ void PParticle::__copyToPGbest() {
 void PParticle::_costCalc(FlowData *data)
 {
     // generate full parameter and copy the global best
-    double** fullPar = new double*[N_PAR];
+    float** fullPar = new float*[N_PAR];
     for (int i = 0; i < N_PAR; i++) {
-        fullPar[i] = new double[_config.dim];
-        memcpy(fullPar[i], PGbest, sizeof(double) * _config.dim);
+        fullPar[i] = new float[_config.dim];
+        memcpy(fullPar[i], PGbest, sizeof(float) * _config.dim);
     }
 
     // set the focused dimension as the value in particles

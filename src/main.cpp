@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
     if (e != cudaSuccess) {
         logger.log("Set cudaLimitStackSize failed, error code:", e);
     }
-    e = cudaDeviceSetLimit(cudaLimitMallocHeapSize, 16 * 1024 * 1024);
+    e = cudaDeviceSetLimit(cudaLimitMallocHeapSize, 32 * 1024 * 1024);
     if (e != cudaSuccess) {
         logger.log("Set cudaLimitMallocHeapSize failed, error code:", e);
     }
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
     logger.logCudaInfo();
 
     srand(time(NULL));
-    // cudaSetDevice(1);
+    cudaSetDevice(1);
     FlowData* data = new FlowData[dataConfig->flowNum];
     Flow::tflow = new int[dataConfig->dim];
     Flow::loadData(data, dataConfig->dataFile);   
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]) {
 
     PParticle Ppar[dataConfig->PSwarmNum];
     Particle Qpar;
-    PParticle::PGbest = new double[dataConfig->dim];
+    PParticle::PGbest = new float[dataConfig->dim];
 
     GlobalConfig pConfig = {
         dataConfig->nodeNum,
@@ -126,7 +126,7 @@ int main(int argc, char* argv[]) {
     logger.log("------------FINAL RESULT------------");
     logger.log(Qpar.getResult());
 
-    double cost[Qpar.MetricsNum];
+    float cost[Qpar.MetricsNum];
     Qpar.predictCost(data, cost);
     logger.log("Predict RMSE:", cost[0], "Predict R2:", cost[1]);
 

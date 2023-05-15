@@ -30,23 +30,23 @@ void Metrics::leaveDevice() {
 //     cudaFree(metrics);
 // }
 
-__device__ __host__ double RMSEMetric::calc(FlowData* data, double* pred, int size) {
-    double sum = 0;
+__device__ __host__ float RMSEMetric::calc(FlowData* data, float* pred, int size) {
+    float sum = 0;
     for (int i = 0; i < size; i++) {
         sum += (data[i].flow - pred[i]) * (data[i].flow - pred[i]);
     }
     return sqrt(sum / size);
 }
 
-__device__ __host__ double RsquaredMetric::calc(FlowData* data, double* pred, int size) {
-    double mean = 0;
+__device__ __host__ float RsquaredMetric::calc(FlowData* data, float* pred, int size) {
+    float mean = 0;
     for (int i = 0; i < size; i++) {
         mean += data[i].flow;
     }
     mean /= size;
 
-    double ss_tot = 0;
-    double ss_res = 0;
+    float ss_tot = 0;
+    float ss_res = 0;
     for (int i = 0; i < size; i++) {
         ss_tot += (data[i].flow - mean) * (data[i].flow - mean);
         ss_res += (data[i].flow - pred[i]) * (data[i].flow - pred[i]);

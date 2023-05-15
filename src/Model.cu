@@ -6,13 +6,21 @@
 
 #include <sstream>
 #include <assert.h>
+__device__ void checkCudaErrors(cudaError_t err, const char* file, const int line)
+{
+    if (err != cudaSuccess)
+    {
+        printf("CUDA error at %s:%d code=%d(%s) \n", file, line, err, cudaGetErrorString(err));
+        exit(EXIT_FAILURE);
+    }
+}
 
-__device__ __host__ Model* Model::create(ModelTypeEnum type, int nodeNum, int dim) {
+__device__ __host__ Model* Model::create(ModelTypeEnum type, int nodeNum, int dim, int flowNum) {
     switch (type) {
     case ModelTypeEnum::Reversed_Gravity:
-        return new RGM(nodeNum, dim);
+        return new RGM(nodeNum, dim, flowNum);
     case ModelTypeEnum::Reversed_Gravity_Exp:
-        return new RGM_EXP(nodeNum, dim);
+        return new RGM_EXP(nodeNum, dim, flowNum);
     default:
         printf("Unknown model type\n");
         return nullptr;
@@ -24,18 +32,18 @@ __device__ __host__ Model* Model::create(ModelTypeEnum type, int nodeNum, int di
 //     cudaFree(model);
 // }
 
-RGM::RGM(int nodeNum, int dim) {
+RGM::RGM(int nodeNum, int dim, int flowNum) {
     this->_nodeNum = nodeNum;
     this->_dim = dim;
-    _flowNum = (nodeNum - 1) * nodeNum;
+    this->_flowNum = flowNum;
     #if defined(__CUDA_ARCH__) 
-        cudaMalloc(&_Push, sizeof(double) * nodeNum);
-        cudaMalloc(&_Attr, sizeof(double) * nodeNum);
-        cudaMalloc(&_beta, sizeof(double));
+        cudaMalloc(&_Push, sizeof(float) * nodeNum);
+        cudaMalloc(&_Attr, sizeof(float) * nodeNum);
+        cudaMalloc(&_beta, sizeof(float));
     #else
-        cudaMallocManaged(&_Push, sizeof(double) * nodeNum);
-        cudaMallocManaged(&_Attr, sizeof(double) * nodeNum);
-        cudaMallocManaged(&_beta, sizeof(double));
+        cudaMallocManaged(&_Push, sizeof(float) * nodeNum);
+        cudaMallocManaged(&_Attr, sizeof(float) * nodeNum);
+        cudaMallocManaged(&_beta, sizeof(float));
     #endif // 
     
 }
@@ -47,7 +55,7 @@ RGM::~RGM() {
     cudaFree(_beta);
 }
 
-__device__ __host__ void RGM::_parse(int index, double* pars) {
+__device__ __host__ void RGM::_parse(int index, float* pars) {
     for(int c=0;c<_nodeNum;c++) {
         _Push[c]=pars[index*_dim+ c];
         _Attr[c]=pars[index*_dim+ _nodeNum + c];
@@ -55,7 +63,7 @@ __device__ __host__ void RGM::_parse(int index, double* pars) {
     *_beta = pars[index*_dim + _dim-1]/BETA_SCALE;
 }
 
-__device__ __host__ void RGM::pred(int index, double* pars, double* pred, FlowData* data) {
+__device__ __host__ void RGM::pred(int index, float* pars, float* pred, FlowData* data) {
     // 从 particle 的维度中解析出需要的 Push Attr beta
     _parse(index, pars);
     // TODO: 这一步其实是可以用 CUDA 2D 的一些手段搞成并行的，但是我懒得学
@@ -63,11 +71,12 @@ __device__ __host__ void RGM::pred(int index, double* pars, double* pred, FlowDa
         if (data[i].src > _flowNum) {
             printf("RGM::pred: flow %d is changed in kernel %d\n", i, index);
         }
-        pred[i] = _FLOW_SCALE * _Push[data[i].src] * _Attr[data[i].dest] / pow(data[i].dist, *_beta);
+        pred[i] = _FLOW_SCALE * _Push[data[i].src] * _Attr[data[i].dest] / powf(data[i].dist, *_beta);
+        checkCudaErrors(cudaGetLastError(), __FILE__, __LINE__);
     }
 }
 
-std::string RGM::getResult(double* pars) {
+std::string RGM::getResult(float* pars) {
     _parse(0, pars);
     std::stringstream ss;
     // int extreme = -1;
@@ -91,10 +100,8 @@ void RGM::leaveDevice() {
     // temporarily do nothing.
 }
 
-RGM_EXP::RGM_EXP(int nodeNum, int dim) : RGM(nodeNum, dim) {
-}
 
-__device__ __host__ void RGM_EXP::pred(int index, double* pars, double* pred, FlowData* data) {
+__device__ __host__ void RGM_EXP::pred(int index, float* pars, float* pred, FlowData* data) {
     // 从 particle 的维度中解析出需要的 Push Attr beta
     _parse(index, pars);
 

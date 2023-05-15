@@ -13,18 +13,18 @@ protected:
     /* data */
     // int Npar; // number of particles
     int _par_dim; // dimension of particles
-    double** _Par;
-    double** _Pbest;
-    double _Pbest_cost[N_PAR];
-    double* _Lpar;
-    double _cost[N_PAR];
+    float** _Par;
+    float** _Pbest;
+    float _Pbest_cost[N_PAR];
+    float* _Lpar;
+    float _cost[N_PAR];
 
     Cost* _cost_func;
     Model* _model;
     GlobalConfig _config;
 
-    double* _Gbest; // global best for particles
-    double _Gbest_cost;
+    float* _Gbest; // global best for particles
+    float _Gbest_cost;
     int _Gbest_id;
 
     virtual void _particle_init(int dim);
@@ -65,13 +65,13 @@ public:
     virtual void train(FlowData* data);
 
     // 获取最后Gbest的cost
-    void predictCost(FlowData* data, double* cost);
+    void predictCost(FlowData* data, float* cost);
     
     // 获取全局最优解对应的cost
-    double getGbestCost();
+    float getGbestCost();
 
     // 获取全局最优解的beta
-    double getGbestBeta();
+    float getGbestBeta();
 
     std::string getResult();
 
@@ -102,7 +102,7 @@ public:
     
     void initialize(GlobalConfig config) override;
 
-    static double* PGbest; // 全部 P 类型粒子在全部维度上的最优解
+    static float* PGbest; // 全部 P 类型粒子在全部维度上的最优解
 
 };
 

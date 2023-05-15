@@ -6,8 +6,8 @@
 struct FlowData {
 	unsigned int src;
 	unsigned int dest;
-	double flow;
-	double dist;
+	float flow;
+	float dist;
 };
 
 namespace Flow {

@@ -13,15 +13,15 @@
  * 
  * @return random number [0-1] 
  */
-double BoxMullerRandom() {
-    double s1=1.0*rand()/RAND_MAX;
-    double s2=1.0*(rand()+1U)/(RAND_MAX+1U); //To avoid zero s2
-    double r=cos(2*PI*s1)*sqrt(-2*log(s2));
+float BoxMullerRandom() {
+    float s1=1.0*rand()/RAND_MAX;
+    float s2=1.0*(rand()+1U)/(RAND_MAX+1U); //To avoid zero s2
+    float r=cos(2*PI*s1)*sqrt(-2*log(s2));
     return r;
 }
 
-double random01() {
-    return (double)rand() / RAND_MAX;
+float random01() {
+    return (float)rand() / RAND_MAX;
 }
 
 void parseArgs(int argc, char *argv[])
