@@ -35,11 +35,11 @@ int main(int argc, char* argv[]) {
 
 
     // 把CUDA的栈和堆开大，以应对大的粒子数
-    cudaError_t e = cudaDeviceSetLimit(cudaLimitStackSize, 64 * 1024);
+    cudaError_t e = cudaDeviceSetLimit(cudaLimitStackSize, 100 * 1024);
     if (e != cudaSuccess) {
         logger.log("Set cudaLimitStackSize failed, error code:", e);
     }
-    e = cudaDeviceSetLimit(cudaLimitMallocHeapSize, 32 * 1024 * 1024);
+    e = cudaDeviceSetLimit(cudaLimitMallocHeapSize, 64 * 1024 * 1024);
     if (e != cudaSuccess) {
         logger.log("Set cudaLimitMallocHeapSize failed, error code:", e);
     }
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
     logger.logCudaInfo();
 
     srand(time(NULL));
-    cudaSetDevice(1);
+    // cudaSetDevice(1);
     FlowData* data = new FlowData[dataConfig->flowNum];
     Flow::tflow = new int[dataConfig->dim];
     Flow::loadData(data, dataConfig->dataFile);   

@@ -1,6 +1,6 @@
-Time: Mon May 15 13:16:28 2023
+Time: Wed May 17 11:39:27 2023
 
-Nodes: 199 Flows: 28898 Npar: 128 MaxIter: 50
+Nodes: 199 Flows: 28898 Npar: 512 MaxIter: 10
 Xmin: 0.001 Xmax: 1e+08 Xrandmin: 5 Xrandmax:70
 alpha: 0.75 pjump: 0.001 Number of P-Swarm groups: 10 CDIMS: 40
 flowscale: 100 distscale: 100
@@ -11,8 +11,8 @@ MultiProcessor count:  72
 Max threads per multiprocessor:  1024 
 Max threads per block:  1024 
 Warp size:  32 
-cudaLimitStackSize:  65536 
+cudaLimitStackSize:  102400 
 cudaLimitDevRuntimeSyncDepth:  2 
-cudaLimitMallocHeapSize:  33554432 
-Data Loading finished in time: 0.263978s
-Initialization finished in time: 0.190947s
+cudaLimitMallocHeapSize:  67108864 
+Data Loading finished in time: 0.341538s
+Initialization finished in time: 0.179601s

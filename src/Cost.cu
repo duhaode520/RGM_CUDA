@@ -4,6 +4,8 @@
 #include "device_launch_parameters.h"
 #include <assert.h>
 
+#include "error_caught.cuh"
+
 
 Cost::Cost(int nodeNum, int dim, int flowNum, Model* model, MetricsTypeEnum metricsType){
     this->_nodeNum = nodeNum;
@@ -31,16 +33,16 @@ __global__ void kernelWrapper(GlobalConfig* config, float* pars, float* cost, Fl
     // https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html?highlight=inherit#data-members
     // 所有的CUDA对象都需要在这个函数中创建
 
+    int index = blockIdx.x * blockDim.x + threadIdx.x;
     Model* model = Model::create(config->modelType, config->nodeNum, config->dim, config->flowNum);
     Cost* costFunc = Cost::create(config->costType, config->nodeNum, config->dim, config->flowNum, model, config->metricsType);
     for (int i = 0; i < config->flowNum; i++) {
-        assert(data[i].src < config->flowNum);
+        if (data[i].src > 50000) {
+            printf("Wrapper: flow %d is broken in kernel %d\n", i, index);
+        }
+        checkCudaErrors(cudaGetLastError(), index, data, __FILE__, __LINE__);
     }
 
-    // for (int i = 0; i < costFunc->_flowNum; i++) {
-    //     printf("%d->%d: %lf, %lf\n", data[i].src, data[i].dest, data[i].flow, data[i].dist);
-    // }
-    
     costFunc->_execute(pars, cost, data); // 这个地方不work，关键原因是Cost的中有很多不在Cuda上的内存，所以不能直接调用
 
     delete model;
@@ -63,12 +65,11 @@ void Cost::calculate(GlobalConfig config, float** pars, int parNum, FlowData* da
     GlobalConfig* d_config;
 
     cudaMalloc((void**)&d_cost, N_PAR * sizeof(float));
-    cudaMalloc((void**)&d_data, _flowNum * 1.5 * sizeof(FlowData));
+    cudaMalloc((void**)&d_data, _flowNum * 2* sizeof(FlowData));
     cudaMalloc((void**)&d_Par, N_PAR * _dim * sizeof(float));
     cudaMalloc((void**)&d_config, sizeof(GlobalConfig));
-
     // copy data from CPU to GPU
-    cudaMemcpy(d_data, data, _flowNum * 1.5 * sizeof(FlowData), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_data, data, _flowNum * sizeof(FlowData), cudaMemcpyHostToDevice);
     cudaMemcpy(d_Par, LPar, N_PAR * _dim * sizeof(float), cudaMemcpyHostToDevice);
     cudaMemcpy(d_config, &config, sizeof(GlobalConfig), cudaMemcpyHostToDevice);
     int blockNum = (N_PAR + (_THREADS_PER_BLOCK - 1)) / _THREADS_PER_BLOCK;
@@ -135,18 +136,24 @@ void Cost::predict(float* pars, FlowData* data, int metricsSize, MetricsTypeEnum
 // 对应的是 gh 代码的 cost
 __device__ void RegularCost::_execute(float* pars, float *cost, FlowData* data) {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
-    float* pred;
-    cudaMalloc((void**)&pred, _flowNum * sizeof(float));
-
+    float* pred = NULL;
+    cudaError_t e = cudaMalloc((void**)&pred, _flowNum * sizeof(float));
+    if (e != cudaSuccess) {
+        printf("Pred size %d, malloc Failed in Thread %d, Error: %s, %s\n", _flowNum*sizeof(float), index, cudaGetErrorName(e), cudaGetErrorString(e));
+    }
+    checkCudaErrors(cudaGetLastError(), index, data, __FILE__, __LINE__);
+    // printf("pred size: %d\n", _flowNum * sizeof(float));
     for (int i = 0; i < _flowNum; i++) {
         if (data[i].src > _flowNum) {
             printf("execute: flow %d is broken in kernel %d\n", i, index);
         }
     }
 
+    checkCudaErrors(cudaGetLastError(), index, data, __FILE__, __LINE__);
     _model->pred(index, pars, pred, data);
     cost[index] = _metrics->calc(data, pred, _flowNum);
     cudaFree(pred);
+    checkCudaErrors(cudaGetLastError(), index, data, __FILE__, __LINE__);
 }
 
 __device__ __host__ Cost* Cost::create(CostTypeEnum costType, int nodeNum, int dim, int flowNum, Model* model, MetricsTypeEnum metricsType) {

@@ -6,14 +6,7 @@
 
 #include <sstream>
 #include <assert.h>
-__device__ void checkCudaErrors(cudaError_t err, const char* file, const int line)
-{
-    if (err != cudaSuccess)
-    {
-        printf("CUDA error at %s:%d code=%d(%s) \n", file, line, err, cudaGetErrorString(err));
-        exit(EXIT_FAILURE);
-    }
-}
+#include "error_caught.cuh"
 
 __device__ __host__ Model* Model::create(ModelTypeEnum type, int nodeNum, int dim, int flowNum) {
     switch (type) {
@@ -66,13 +59,15 @@ __device__ __host__ void RGM::_parse(int index, float* pars) {
 __device__ __host__ void RGM::pred(int index, float* pars, float* pred, FlowData* data) {
     // 从 particle 的维度中解析出需要的 Push Attr beta
     _parse(index, pars);
+    checkCudaErrors(cudaGetLastError(), index, data, __FILE__, __LINE__);
     // TODO: 这一步其实是可以用 CUDA 2D 的一些手段搞成并行的，但是我懒得学
     for (int i = 0; i < _flowNum; i++) {
         if (data[i].src > _flowNum) {
             printf("RGM::pred: flow %d is changed in kernel %d\n", i, index);
         }
         pred[i] = _FLOW_SCALE * _Push[data[i].src] * _Attr[data[i].dest] / powf(data[i].dist, *_beta);
-        checkCudaErrors(cudaGetLastError(), __FILE__, __LINE__);
+
+        checkCudaErrors(cudaGetLastError(), index, data, __FILE__, __LINE__);
     }
 }
 
